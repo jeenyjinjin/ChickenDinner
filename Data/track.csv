@@ -1,0 +1,8 @@
+trackID, trackName, trackCourses,
+T00, Others, "{ANLY482, IS102, IS204, IS410, IS432, IS303, IS404, IS470}",
+T01, Core Courses, "{IS112, IS110, IS111, IS113, IS210, IS306, IS212, IS213, IS214, IS103, IS480}",
+T02, Financial Technology, "{IS444, IS419, IS423, IS445, IS430}",
+T03, Digital Business Solutioning, "{IS441, IS305, IS412, IS421, IS425, IS435, IS439, IS446}",
+T04, Business Analytics, "{ANLY104, IS415, IS417, IS424, IS428, IS434, IS450, IS451}",
+T05, Software Development, "{IS442, IS416, IS421, IS434, IS443, IS439}",
+T06, Cybersecurity, "{IS443, IS403, IS436, IS437}"

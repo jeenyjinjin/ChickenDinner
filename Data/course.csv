@@ -1,0 +1,5 @@
+trackID, courseID, courseName, instructor, skills, software, prereq
+T01, IS112, Data Management, ZHENG Baihua, "{ER Modelling,Relational Database,Data Normalization,SQL,Similarity Search of Unstructured Data}", "{MySQL,Visio}",
+T01, IS110, Information Systems & Innovation, TANG Qian, "{Process diagram,Business process innovation,Cost-benefit analysis,Business value calculation,Change diagnosis,Solution impact analysis,Business model innovation,Business ecosystem,Case analysis}",,
+T01, IS111, Introduction to Programming, JIANG Jing, "{Programming constructs,Data structures,File handling,Problem solving}",,
+
