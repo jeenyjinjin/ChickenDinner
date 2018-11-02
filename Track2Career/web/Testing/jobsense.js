@@ -21,4 +21,3 @@ request = https.get(options, function(res){
         onsole.log("Got error: " + e.message);
     });
 });
-}
