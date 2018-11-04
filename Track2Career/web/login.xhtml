@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Track2Career - Login</title>
         <meta charset="UTF-8"/>
@@ -25,44 +27,49 @@
         <div class="limiter">
             <div class="container-login100" style="background-image: url('#{resource['images/careerbackground.jpg']}');">
                 <div class="wrap-login100">
-                    <form class="login100-form validate-form">
+                    <h:form class="login100-form validate-form">                        
                         <span class="login100-form-logo">
                             <i class="material-icons" style="font-size:60px;color:lightblue;text-shadow:2px 2px 4px #000000;">people_outline</i>
                         </span>
 
                         <span class="login100-form-title p-b-34 p-t-27">
                             Log in
-                            <br/>
-                            #{signup.message}
                         </span>
-
-                        <div class="wrap-input100 validate-input" data-validate = "Enter username">
-                            <input class="input100" type="text" name="username" placeholder="Username"/>
+                        <span style="color: white;">#{signup.message}</span>
+                        <span style="color: white;">#{user.message}</span>
+                        <br/><br/>
+                        
+                        
+                        <div class="wrap-input100 validate-input" data-validate="Enter username">
+                            <h:message for="username" style="color:red;" />
+                            <h:inputText value="#{user.username}" id="username" a:placeholder="Username" required="true" requiredMessage="Username is required" class="input100"></h:inputText>
                             <span class="focus-input100" data-placeholder="&#xf207;"></span>
                         </div>
-
-                        <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <input class="input100" type="password" name="pass" placeholder="Password"/>
+                        
+                        
+                        <div class="wrap-input100 validate-input" data-validate="Enter passwird">
+                            <h:message for="password" style="color:red;" />
+                            <h:inputSecret value="#{user.password}" id="password" a:placeholder="Password" required="true" requiredMessage="Password is required" class="input100"></h:inputSecret>
                             <span class="focus-input100" data-placeholder="&#xf191;"></span>
                         </div>
-
+                        
+                        
                         <div class="contact100-form-checkbox">
-                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me"/>
+                            <h:selectBooleanCheckbox value = "Remember Me" id="ckb1" class="input-checkbox100" />
                             <label class="label-checkbox100" for="ckb1">
                                 Remember me
                             </label>
                         </div>
-
+                        
+                        
                         <div class="container-login100-form-btn">
-                            <button class="login100-form-btn">
-                                Login
-                            </button>
+                            <p:commandButton class="login100-form-btn" ajax="false" value="Login" actionListener="#{user.submit()}" style="color: #000;" />
                         </div>
-
+                        
                         <div class="text-center p-t-20">
                             <h:link value="Signup" outcome="signup" class="txt1"/>
                         </div>
-                    </form>
+                    </h:form>
                 </div>
             </div>
         </div>

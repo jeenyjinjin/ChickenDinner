@@ -105,7 +105,6 @@ public class SignupBean implements Serializable {
     public String submit() {
         // do work
         // Check if the fields are filled up
-        System.out.println("nric: \"" + nric + "\"");
         if (nric == null || nric.trim().isEmpty()) {
             message = "NRIC/FIN No. is required to be filled up!";
             return "signup";
