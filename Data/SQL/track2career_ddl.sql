@@ -55,7 +55,9 @@ CREATE TABLE user (
 	user_id VARCHAR(20) NOT NULL,
 	username VARCHAR(40) NOT NULL,
 	password VARCHAR(100) NOT NULL,
-	track_id CHAR(25) NOT NULL,
+	email VARCHAR(100) NOT NULL,
+	school VARCHAR(100) NOT NULL,
+	track_id CHAR(25),
 	
 	CONSTRAINT user_pk PRIMARY KEY (user_id),
 	CONSTRAINT user_fk FOREIGN KEY (track_id) REFERENCES track (track_id)

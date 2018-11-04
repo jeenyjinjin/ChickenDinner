@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Material design sign up form</title>
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/select2/select2.min.js"/>
+
+        <h:outputStylesheet name="css/signup.css" />
+        <h:outputStylesheet name="css/select2/select2.min.css"/>
+    </h:head>
+    <h:body>
+        <div id="login-box">
+            <div class="left">
+                <h:form>
+                    <h:panelGrid columns="1">
+                        <h1>Sign up</h1>
+                        <font color="red">#{signup.message}</font>
+                        <h:message for="nric" style="color:red;" />
+                        <h:inputText value="#{signup.nric}" id="nric" a:placeholder="NRIC/FIN No." required="true" requiredMessage="NRIC is required"></h:inputText>
+
+                        
+                        <h:message for="username" style="color:red;" />
+                        <h:inputText value="#{signup.username}" id="username" a:placeholder="Username" required="true" requiredMessage="Username is required"></h:inputText>
+                        
+                        
+                        <h:message for="password" style="color:red;" />
+                        <h:inputSecret value="#{signup.password}" id="password" a:placeholder="Password" required="true" requiredMessage="Password is required"></h:inputSecret>
+                        
+                        
+                        <h:message for="email" style="color:red;" />
+                        <h:inputText value="#{signup.email}" id="email" a:placeholder="E-mail" required="true" requiredMessage="Email is required"></h:inputText>
+                        
+                        
+                        <h:message for="school" style="color:red;" />
+                        <h:selectOneListbox  value="#{signup.school}" id="school" class="myselect" style="width: 100%;" required="true" requiredMessage="Please select a school">
+                            <f:selectItem itemValue="" itemLabel="Select School" itemDisabled="true" />
+                            <f:selectItems value="#{signup.schools}" var="school" itemValue="#{school}" itemLabel="#{school}"/>
+                        </h:selectOneListbox>
+                        <!--
+                        <br/>
+                        <h:outputLabel value="My Skills" />
+                        <h:selectManyListbox value="#{signup.skill}" class="myselect" required="" style="width: 100%;"> 
+                            <f:selectItem itemValue="" itemLabel="Your Skills" itemDisabled="true" /> 
+                            <f:selectItems value="#{signup.skills}" var="skill" itemValue="#{skill}" itemLabel="#{skill}"/>
+                        </h:selectManyListbox>
+                        -->
+                        <h:commandButton value="Sign me up" action="#{signup.submit}" />
+                    </h:panelGrid>
+                </h:form>
+            </div>
+
+            <div class="right">
+                <span class="loginwith">Sign in with<br />social network</span>
+
+                <button class="social-signin facebook">Log in with facebook</button>
+
+                <button class="social-signin google">Log in with Google+</button>
+
+            </div>
+            <div class = "bottomright"><a href = "userhome.html">Skip</a></div>
+            <div class="or">OR</div>
+            <script type="text/javascript">
+                $(".myselect").select2();
+            </script>
+        </div>
+    </h:body>
+</html>

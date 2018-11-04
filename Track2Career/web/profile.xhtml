@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Track2Career</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/skel.min.js"/>
+        <h:outputScript name="js/skel-layers.min.js"/>
+        <h:outputScript name="js/select2/select2.min.js"/>
+        <h:outputScript name="js/bootstrap.min.js"/>
+        <h:outputScript name="js/html5shiv.js"/>
+        <h:outputScript name="js/respond.min.js"/>
+        <h:outputScript name="js/init.js"/>
+
+        <h:outputStylesheet name="css/bootstrap.min.css" id="bootstrap-css" />
+        <h:outputStylesheet name="css/skel.css" />
+        <h:outputStylesheet name="css/style.css" />
+        <h:outputStylesheet name="css/style-xlarge.css" />
+        <h:outputStylesheet name="css/progressbar.css"/>
+        <h:outputStylesheet name="css/select2/select2.min.css"/>
+        <h:outputStylesheet name="fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>
+
+        <style>
+            body {
+                padding-top: 70px;
+                /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+            }
+
+            .othertop{margin-top:10px;}
+        </style>
+    </h:head>
+    <h:body id="top">
+        <!-- Header -->
+        <header id="header" class="skel-layers-fixed">
+            <h1><a href="#">Track2Career</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><h:link value="Home" outcome="userhome" /></li>
+                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
+                    <li><h:link value="Jobs" outcome="jobs" /></li>
+                    <li><h:link value="Upload" outcome="upload" /></li>
+                    <li><h:link value="Profile" outcome="profile" /></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 ">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <legend>User profile form requirement</legend>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Name (Full name)">Name (Full name)</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user">
+                                            </i>
+                                        </div>
+                                        <input id="Name (Full name)" name="Name (Full name)" type="text" placeholder="Name (Full name)" class="form-control input-md"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- File Button -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Upload photo">Upload photo</label>
+                                <div class="col-md-4">
+                                    <input id="Upload photo" name="Upload photo" class="input-file" type="file"/>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Primary Occupation">Primary Occupation</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-briefcase"></i>
+                                        </div>
+                                        <input id="Primary Occupation" name="Primary Occupation" type="text" placeholder="Primary Occupation" class="form-control input-md"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Secondary Occupation (if any)">Secondary Occupation (if any)</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-briefcase"></i>
+                                        </div>
+                                        <input id="Secondary Occupation (if any)" name="Secondary Occupation (if any)" type="text" placeholder="Secondary Occupation (if any)" class="form-control input-md"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Skills">Skills</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-graduation-cap"></i>
+                                        </div>
+                                        
+                                        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+                                        <select class="myselect" multiple="multiple" style="width:525px;" data-placeholder = "Your Skills">
+                                            <option>Python</option>
+                                            <option>Consulting</option>
+                                            <option>Management</option>
+                                            <option>Java</option>
+                                            <option>CPA</option>
+                                            <option>Leadership</option>
+                                            <option>Socialogical frameworks</option>
+                                            <option>C++</option>
+                                        </select>
+                                        <script type="text/javascript">
+                                            $(".myselect").select2();
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Phone number ">Phone number </label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-phone"></i>
+                                        </div>
+                                        <input id="Phone number " name="Phone number " type="text" placeholder="Primary Phone number " class="form-control input-md"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Email Address">Email Address</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-envelope-o"></i>
+                                        </div>
+                                        <input id="Email Address" name="Email Address" type="text" placeholder="Email Address" class="form-control input-md"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="Working Experience (time period)">Working Experience (time period)</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input id="Working Experience (time period)" name="Working Experience" type="text" placeholder="Enter time period " class="form-control input-md"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" ></label>
+                                <div class="col-md-4">
+                                    <a href="userhome.html" class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up"></span> Submit</a>
+                                    <a href="profile.html" class="btn btn-danger" value=""><span class="glyphicon glyphicon-remove-sign"></span> Clear</a>
+
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="col-md-2 hidden-xs">
+                    <h:graphicImage name="images/regandemo.jpg" class="img-responsive img-thumbnail "/>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

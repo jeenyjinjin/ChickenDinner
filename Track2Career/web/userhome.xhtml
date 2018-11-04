@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Track2Career</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/skel.min.js"/>
+        <h:outputScript name="js/skel-layers.min.js"/>
+        <h:outputScript name="js/init.js"/>
+
+        <h:outputStylesheet name="css/skel.css" />
+        <h:outputStylesheet name="css/style.css" />
+        <h:outputStylesheet name="css/style-xlarge.css" />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    </h:head>
+    <h:body id="top">
+        <!-- Header -->
+        <header id="header" class="skel-layers-fixed">
+            <h1><a href="#">Track2Career</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><h:link value="Home" outcome="userhome" /></li>
+                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
+                    <li><h:link value="Jobs" outcome="jobs" /></li>
+                    <li><h:link value="Upload" outcome="upload" /></li>
+                    <li><h:link value="Profile" outcome="profile" /></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section id="two" class="wrapper style1">
+            <div class="container">
+                <div class="row">
+                    <div class="6u">
+                        <section class="special">
+                            <a href="#" class="image fit"><img src="#{resource['images/pic01.jpg']}" alt="" /></a>
+                            <h3>Career2Track</h3>
+                            <p>Fill in your dream job and determine your course!</p>
+                            <ul class="actions">
+                                <div class = "wrap">
+                                    <form action="TrackSearchResults.html" method="get">
+                                        <div class="search">
+
+                                            <input type="text" class="searchTerm" placeholder="Search Track"/>
+                                            <button type="submit" class="searchButton">
+                                                <i class="material-icons">search</i>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="6u">
+                        <section class="special">
+                            <a href="#" class="image fit"><img src="#{resource['images/pic02.jpg']}" alt="" /></a>
+                            <h3>Track2Career</h3>
+                            <p>Ever wonder where a track is going to lead you? Explore your future potential now!</p>
+
+                            <ul class="actions">
+                                <div class = "wrap">
+                                    <form action="TrackSearchResults.html" method="get">
+                                        <div class="search">
+                                            <input type="text" class="searchTerm" placeholder="Search Track"/>
+                                            <button type="submit" class="searchButton">
+                                                <i class="material-icons">search</i>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </h:body>
+</html>
