@@ -432,6 +432,42 @@
 		opacity: 1.0;
 	}
 
+/* Tool Tip */
+        .tip {
+            border-bottom: 1px dotted [template("base font color")];
+            position: relative;
+            cursor: help;
+            text-decoration: none;
+            color: inherit;
+        }
+        .tip span {
+            display: none;
+            z-index: 100;
+            position: absolute;
+            padding: .6em;
+            padding-left: 1em;
+            top: 1.5em;
+            left: 2.4em;
+            width: 25em;
+            background-color: #FFFFFF;
+            border: 1px solid #000000;
+            border-radius: 0.5em;
+        }
+        .tip:hover span {
+            display: inline-block;
+        } 
+        .sg-question-set,
+        .sg-type-radio ul.sg-list-vertical li,
+        .sg-type-checkbox ul.sg-list-vertical li,
+        .sg-question-options,
+        .sg-type-radio-likert .sg-question-options,
+        .sg-type-table .sg-question-options,
+        .sg-instructions
+        {
+            overflow: visible;
+        }
+        
+        
 /* Box */
 
 	.box {
