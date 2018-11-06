@@ -16,6 +16,15 @@
         <h:outputStylesheet name="css/skel.css" />
         <h:outputStylesheet name="css/style.css" />
         <h:outputStylesheet name="css/style-xlarge.css" />
+        <script type="text/javascript">
+        function goToNewPage()
+        {
+            var url = document.getElementById('trackselection').value;
+            if(url != 'none') {
+                window.location = url;
+            }
+        }
+        </script>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     </h:head>
@@ -44,10 +53,10 @@
                             <p>All roads lead to Rome, which track is the shortest?</p>
                             <ul class="actions">
                                 <div class = "wrap">
-                                    <form action="TrackSearchResults.xhtml" method="get">
+                                    <form action="TrackSearchResults.html" method="get">
                                         <div class="search">
 
-                                            <input type="text" class="searchTerm" placeholder="Search Job"/>
+                                            <input type="text" class="searchTerm" placeholder="Search Track"/>
                                             <button type="submit" class="searchButton">
                                                 <i class="material-icons">search</i>
                                             </button>
@@ -66,13 +75,23 @@
 
                             <ul class="actions">
                                 <div class = "wrap">
-                                    <form action="TrackSearchResults.xhtml" method="get">
-                                        <div class="search">
-                                            <input type="text" class="searchTerm" placeholder="Search Track"/>
-                                            <button type="submit" class="searchButton">
-                                                <i class="material-icons">search</i>
-                                            </button>
-                                        </div>
+                                    <form>
+                                        
+                                            
+                                            <select name = "trackselection" id="trackselection" accesskey="target" onchange='goToNewPage();'>
+                                                <option value="" disabled="True" selected="True" hidden="True">Select your option</option>
+                                                <option value ="business_analytics_temp.xhtml">Business Analytics</option>
+                                                <option value ="DBSTrackCourses.xhtml">Digital Business Solution</option>
+                                                <option value ="finance_temp.xhtml">Financial Technology</option>
+                                                <option value ="Software_Development_temp.xhtml">Software Development</option>
+                                                <option value ="AI_temp.xhtml">Artificial Intelligence</option>
+                                                <option value ="Cybersecurity_temp.xhtml">Cybersecurity</option>
+                                                
+                                            </select>
+                                            
+                                        
+                                            
+                                        
                                     </form>
 
                                 </div>
