@@ -59,7 +59,7 @@ public class UserBean implements Serializable {
 
             User user = query.getSingleResult();
             if (user != null) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.xhtml");
             }
             
         } catch (Exception e) {
