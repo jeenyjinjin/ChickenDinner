@@ -43,7 +43,7 @@ CREATE TABLE software (
 	CONSTRAINT software_fk FOREIGN KEY (course_id) REFERENCES course (course_id)
 );
 
-CREATE TABLE prereq_course (
+CREATE TABLE prerequisite_course (
 	prerequisite_course_id CHAR(26) NOT NULL,
 	course_id VARCHAR(10) NOT NULL,
 	
