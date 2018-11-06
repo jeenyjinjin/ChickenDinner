@@ -18,8 +18,8 @@ VALUES ("SW01", "mySQL", "IS112"), ("SW02", "Visio", "IS110"), ("SW03", "Python"
 INSERT INTO prerequisite_course (prerequisite_course_id, course_id)
 VALUES ("IS111", IS112);
 
-INSERT INTO user (user_id, username, password, email, school, track_id)
-VALUES ("S1234567A", "GuineaPig", "tester", "test@smu.edu.sg", "NUS"), ("S9325681G", "MoreLegit", "trustme", "mryandao@hotmail.com", "SMU", "T03");
+INSERT INTO user (user_id, user_type, username, password, email, school, track_id)
+VALUES ("S1234567A", "student", "GuineaPig", "tester", "test@smu.edu.sg", "NUS"), ("S9325681G", "admin", "MoreLegit", "trustme", "mryandao@hotmail.com", "SMU", "T03");
 
 INSERT INTO user_course (user_course_id, course_id, user_id) 
 VALUES ("UC1", "IS112", "S1234567A"), ("UC2", "IS111", "SS9325681G");

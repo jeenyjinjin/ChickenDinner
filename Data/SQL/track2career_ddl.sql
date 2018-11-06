@@ -53,6 +53,7 @@ CREATE TABLE prereq_course (
 
 CREATE TABLE user (
 	user_id VARCHAR(20) NOT NULL,
+        user_type VARCHAR (20) NOT NULL,
 	username VARCHAR(40) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	email VARCHAR(100) NOT NULL,

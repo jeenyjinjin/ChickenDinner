@@ -63,6 +63,7 @@ public class UserBean implements Serializable {
             }
             
         } catch (Exception e) {
+            e.printStackTrace();
             message = "Invalid credentials detected!";
         }
     }
