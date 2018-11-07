@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Track2Career - Business Analytics Track</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -27,7 +28,7 @@
             <nav id="nav">
                 <ul>
                     <li><h:link value="Home" outcome="userhome" /></li>
-                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
+                    <li><h:link value="Track" outcome="userhome" /></li>
                     <li><h:link value="Jobs" outcome="jobs" /></li>
                     <li><h:link value="Upload" outcome="upload" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
@@ -38,14 +39,14 @@
         <!-- Main -->
         <section id="main" class="wrapper style1">
             <header class="major">
-                <h2>Business Analytics Track</h2>
+                <h2>Business Analytics</h2>
             </header>
             <div class="container">
                 <div class="row">
                     <div class="4u">
-                        <h2><h:link value="Track Overview" outcome="DBSTrackCourses" /></h2>
+                        <h2><h:link value="Track Overview" outcome="business_analytics_temp" /></h2>
                     </div>
-                    <div class="4u">
+                    <div class="5u">
                         <h2><h:link value="Track-specific Skills" outcome="TrackSpecificSkills" /></h2>
                     </div>
                     <div class="3u">
@@ -54,9 +55,9 @@
                     <div class="12u">
                         <section>
                             <a href="#" class="image fit">
-                                <h:graphicImage name="images/BigDataInsights.jpg"/>
+                                <h:graphicImage name="images/bizanaly.jpg"/>
                             </a>
-                            <p>Students doing the Digital Business Solutioning Track will learn how to ideate, design and develop IT solutions that will leverage digital technologies (like cloud computing, big data and analytics, mobile networks, social media, Internet of Things) to enhance operational excellence, integrate information-processes-people, and drive product and process innovation.</p>
+                            <p>The Business Analytics Track aims to provide students with the concepts, methods and best practices of data analytics through working on real world use cases and practicum.</p>
                             <br/>
                                 <p>Courses in this track:</p>
                                 <table style="width:100%">
@@ -65,7 +66,7 @@
                                         <th></th>
                                     </tr>
                                     <tr>
-                                        <td>Digital Business - Technologies and Transformation</td>
+                                        <td></td>
                                     </tr>
                                 </table>
 
@@ -76,14 +77,19 @@
                                         <th></th>
                                     </tr>
                                     <tr>
-                                        <td>Advanced Seminar on Information Systems Management</td>
-                                        <td>Enterprise Business Solutions</td>
-                                        <td>Internet of Things: Technology and Applications</td>
+                                        <td>Analytics Foundations</td>
+                                        <td>Geospatial Analytics &amp; Applications</td>
+                                        <td>Data Warehousing for Business Analytics</td>
                                     </tr>
                                     <tr>
-                                        <td>Enterprise Analytics for Decision Support</td>
-                                        <td>Enterprise Web Solutions</td>
-                                        <td>Systems for Intelligent Cities</td>
+                                        <td>Data Mining &amp; Business Analytics</td>
+                                        <td>Visual Analytics for Business Intelligence</td>
+                                        <td>Social Analytics &amp; Applications</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Text Mining and Language Processing</td>
+                                        <td>Digital Analytics Technology</td>
+                                        <td></td>
                                     </tr>
                                 </table>
                         </section>
@@ -98,9 +104,9 @@
                 <li class="visited first">
                     <h:link value="Search" outcome="userhome" />
                 </li>
-                <li class="visited first">
+                <!--<li class="visited first">
                     <h:link value="Search Result" outcome="TrackSearchResults" />
-                </li>
+                </li>-->
                 <li class="active">
                     <h:link value="Track Courses" outcome="DBSTrackCourses" />
                 </li>
