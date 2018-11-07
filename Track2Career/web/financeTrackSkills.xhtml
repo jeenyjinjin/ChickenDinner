@@ -7,7 +7,7 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
-        
+
         <h:outputScript name="js/jquery.min.js"/>
         <h:outputScript name="js/skel.min.js"/>
         <h:outputScript name="js/skel-layers.min.js"/>
@@ -17,7 +17,7 @@
         <h:outputStylesheet name="css/style.css" />
         <h:outputStylesheet name="css/style-xlarge.css" />
         <h:outputStylesheet name="css/progressbar.css"/>
-        
+
         <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
     </h:head>
     <h:body id="top">
@@ -41,54 +41,45 @@
                 <h2>Financial Technology</h2>
             </header>
             <div class="container">
+
                 <div class="row">
                     <div class="4u">
                         <h2><h:link value="Track Overview" outcome="finance_temp" /></h2>
                     </div>
-                    <div class="5u">
+                    <div class="4u">
                         <h2><h:link value="Track-specific Skills" outcome="financeTrackSkills" /></h2>
                     </div>
                     <div class="3u">
                         <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" /></h2>
                     </div>
+
                     <div class="12u">
                         <section>
-                            <a href="#" class="image fit">
-                                <h:graphicImage name="images/fintech.jpg"/>
-                            </a>
-                            <p>The Financial Technology Track covers the foundations of enterprise architecture in banking, as well as the functional domain areas, such as retail &amp; corporate banking, digital payments &amp; innovations, and financial markets.</p>
-                            <br/>
-                                <p>Courses in this track:</p>
-                                <table style="width:100%">
-                                    <tr>
-                                        <th>Compulsory Track Course(s)</th>
-                                        <th></th>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                    </tr>
-                                </table>
-
-                                <table style="width:100%">
-                                    <tr>
-                                        <th>Track Electives</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                    <tr>
-                                        <td>Digital Banking Enterprise Architecture</td>
-                                        <td>Retail Banking &amp; Mobile Technology</td>
-                                        <td>Financial Markets</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Corporate Banking &amp; Smart Contracts</td>
-                                        <td>Digital Payments &amp; Innovation</td>
-                                        <td></td>
-                                    </tr>
-                                </table>
+                            <p>Skills in this track:</p>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>Service Oriented Architecture</td>
+                                    <td>Emerging FinTech trends</td>
+                                    <td>Core banking</td>
+                                    <td>Retail banking</td>
+                                </tr>
+                                <tr>
+                                    <td>Trading Strategies</td>
+                                    <td>Settlements Process</td>
+                                    <td>Banking technology risk management</td>
+                                    <td>Payment Instruments</td>
+                                </tr>
+                                <tr>
+                                    <td>Payments Architecture </td>
+                                    <td>Vanilla Options</td>
+                                    <td>Cash management</td>
+                                    <td>Trade finance</td>
+                                </tr>
+                            </table>
                         </section>
-                    </div>
+                    </div>                                            
                 </div>
+                <hr class="major" />
             </div>
         </section>
 
@@ -101,11 +92,13 @@
                 <!--<li class="visited first">
                     <h:link value="Search Result" outcome="TrackSearchResults" />
                 </li>-->
-                <li class="active">
+                <li class="visited first">
                     <h:link value="Track Courses" outcome="finance_temp" />
                 </li>
-                <li class="next">Skill Analysis</li>
-                <li class="">Related Jobs</li>
+                <li class="active">
+                    <h:link value="Skill Analysis" outcome="financeTrackSkills" />
+                </li>
+                <li class="next">Related Jobs</li>
             </ul>
         </div>
     </h:body>
