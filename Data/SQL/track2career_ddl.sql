@@ -9,7 +9,7 @@ USE `track2career`;
 
 /* Table creation STARTS */
 CREATE TABLE track (
-	track_id CHAR(25) NOT NULL,
+	track_id CHAR(4) NOT NULL,
 	track_name VARCHAR(200) NOT NULL,
 	
 	CONSTRAINT track_pk PRIMARY KEY (track_id)
@@ -17,7 +17,7 @@ CREATE TABLE track (
 
 CREATE TABLE course (
 	course_id VARCHAR(10) NOT NULL,
-	track_id CHAR(25) NOT NULL,
+	track_id CHAR(4) NOT NULL,
 	course_name VARCHAR(200) NOT NULL,
 	instructor_name VARCHAR(100) NOT NULL,
 	
@@ -26,7 +26,7 @@ CREATE TABLE course (
 );
 
 CREATE TABLE skill (
-	skill_id CHAR(25) NOT NULL,
+	skill_id CHAR(5) NOT NULL,
 	skill_name VARCHAR(200) NOT NULL,
 	course_id VARCHAR(10) NOT NULL,
 	
@@ -35,7 +35,7 @@ CREATE TABLE skill (
 );
 
 CREATE TABLE software (
-	software_id CHAR(25) NOT NULL,
+	software_id CHAR(5) NOT NULL,
 	software_name VARCHAR(200) NOT NULL,
 	course_id VARCHAR(10) NOT NULL,
 	
@@ -53,12 +53,11 @@ CREATE TABLE prerequisite_course (
 
 CREATE TABLE user (
 	user_id VARCHAR(20) NOT NULL,
-        user_type VARCHAR (20) NOT NULL,
 	username VARCHAR(40) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	email VARCHAR(100) NOT NULL,
 	school VARCHAR(100) NOT NULL,
-	track_id CHAR(25),
+	track_id CHAR(4),
 	
 	CONSTRAINT user_pk PRIMARY KEY (user_id),
 	CONSTRAINT user_fk FOREIGN KEY (track_id) REFERENCES track (track_id)
