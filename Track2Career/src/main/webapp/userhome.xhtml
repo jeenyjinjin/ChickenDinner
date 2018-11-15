@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Track2Career</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/skel.min.js"/>
+        <h:outputScript name="js/skel-layers.min.js"/>
+        <h:outputScript name="js/init.js"/>
+
+        <h:outputStylesheet name="css/skel.css" />
+        <h:outputStylesheet name="css/style.css" />
+        <h:outputStylesheet name="css/style-xlarge.css" />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    </h:head>
+    <h:body id="top">
+        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
+        <!-- Header -->
+        <header id="header" class="skel-layers-fixed">
+            <h1><a href="#">Track2Career</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><h:link value="Home" outcome="userhome" /></li>
+                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
+                    <li><h:link value="Jobs" outcome="jobs" /></li>
+                    <li><h:link value="Profile" outcome="profile" /></li>
+                    <li><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section id="two" class="wrapper style1">
+            <div class="container">
+                <div class="row">
+                    <div class="6u">
+                        <section class="special">
+                            <a href="#" class="image fit"><img src="#{resource['images/fasttrack.png']}" alt="" /></a>
+                            <h3>Fast Track</h3>
+                            <p>All roads lead to Rome, which track is the shortest?</p>
+                            <ul class="actions">
+                                <div class = "wrap">
+                                    <h:form>
+                                        <div class="search">
+                                            <h:message for="searchJob" style="color:red;" />
+                                            <h:inputText class="searchTerm" value="#{search.queryJob}" id="searchJob" a:placeholder="Search Job" required="true" requiredMessage="You need to enter something to search"></h:inputText>
+
+                                            <p:commandButton class="searchButton" ajax="false" actionListener="#{search.submitJob()}" style="color: #000;" icon="ui-icon-search"></p:commandButton>
+                                        </div>
+
+                                        <span style="color: red;height: 20px;">#{search.messageJ}</span>
+                                    </h:form>
+                                </div>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="6u">
+                        <section class="special">
+                            <a href="#" class="image fit"><img src="#{resource['images/trackpotentialsinverse.png']}" alt="" /></a>
+                            <h3>Track Potential</h3>
+                            <p>Ever wonder where a track is going to lead you? Explore your future jobs now!</p>
+
+                            <ul class="actions">
+                                <div class = "wrap">
+                                    <h:form>
+                                        <h:selectOneMenu id="trackselection" accesskey="target" value="#{search.track}">
+                                            <f:selectItem itemValue="" itemLabel="Select Track" itemDisabled="true" />
+                                            <f:selectItems value="#{search.initialTracks}" var="track" itemValue="#{track.trackName}" itemLabel="#{track.trackName}"/>
+                                            
+                                            <p:commandButton class="searchButton" ajax="false" actionListener="#{search.submitTrack()}" style="color: #000;" icon="ui-icon-search"></p:commandButton>
+                                        </h:selectOneMenu>
+                                    </h:form>
+                                </div>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </h:body>
+</html>
