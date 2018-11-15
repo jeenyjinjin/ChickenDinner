@@ -1,10 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
-        <title>Track2Career - Digital Business Solutioning</title>
+        <title>Track2Career - Cybersecurity</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
@@ -22,17 +21,16 @@
         <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
     </h:head>
     <h:body id="top">
-        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
         <!-- Header -->
         <header id="header" class="skel-layers-fixed">
             <h1><a href="#">Track2Career</a></h1>
             <nav id="nav">
                 <ul>
                     <li><h:link value="Home" outcome="userhome" /></li>
-                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
+                    <li><h:link value="Track" outcome="userhome" /></li>
                     <li><h:link value="Jobs" outcome="jobs" /></li>
+                    <li><h:link value="Upload" outcome="upload" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
-                    <li><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
                 </ul>
             </nav>
         </header>
@@ -40,20 +38,15 @@
         <!-- Main -->
         <section id="main" class="wrapper style1">
             <header class="major">
-                <h2>Digital Business Solutioning</h2>
+                <h2>Cybersecurity</h2>
             </header>
             <div class="container">
                 <div class="row">
                     <div class="4u">
-                        <h2><h:link value="Track Overview" outcome="DBSTrackCourses" /></h2>
+                        <h2><h:link value="Track Overview" outcome="Cybersecurity_temp" /></h2>
                     </div>
-<<<<<<< HEAD:Track2Career/target/Track2Career-1.0-SNAPSHOT/DBSTrackCourses.xhtml
-                    <div class="4u">
-                        <h2><h:link value="Track-specific Skills" outcome="TrackSpecificSkills" /></h2>
-=======
                     <div class="5u">
-                        <h2><h:link value="Track-specific Skills" outcome="DBSTrackSkills" /></h2>
->>>>>>> f14ec039414edd2edc032a20cca1bb88694333bd:Track2Career/web/DBSTrackCourses.xhtml
+                        <h2><h:link value="Track-specific Skills" outcome="CybersecTrackSkills" /></h2>
                     </div>
                     <div class="3u">
                         <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" /></h2>
@@ -61,9 +54,9 @@
                     <div class="12u">
                         <section>
                             <a href="#" class="image fit">
-                                <h:graphicImage name="images/BigDataInsights.jpg"/>
+                                <h:graphicImage name="images/cybersec.jpg"/>
                             </a>
-                            <p>Students doing the Digital Business Solutioning Track will learn how to ideate, design and develop IT solutions that will leverage digital technologies (like cloud computing, big data and analytics, mobile networks, social media, Internet of Things) to enhance operational excellence, integrate information-processes-people, and drive product and process innovation.</p>
+                            <p>The Cybersecurity Track aims to produce high-quality security practitioners with a solid theoretical and practical foundation. The courses in this track have a full-spectrum coverage on various aspects of security fundamentals, including (but not limited) to network security, data security and software security.</p>
                             <br/>
                                 <p>Courses in this track:</p>
                                 <table style="width:100%">
@@ -72,7 +65,7 @@
                                         <th></th>
                                     </tr>
                                     <tr>
-                                        <td>Digital Business - Technologies and Transformation</td>
+                                        <td></td>
                                     </tr>
                                 </table>
 
@@ -83,14 +76,14 @@
                                         <th></th>
                                     </tr>
                                     <tr>
-                                        <td>Advanced Seminar on Information Systems Management</td>
-                                        <td>Enterprise Business Solutions</td>
-                                        <td>Internet of Things: Technology and Applications</td>
+                                        <td>Foundations of Cybersecurity</td>
+                                        <td>Network Security</td>
+                                        <td>Data Security &amp; Privacy</td>
                                     </tr>
                                     <tr>
-                                        <td>Enterprise Analytics for Decision Support</td>
-                                        <td>Enterprise Web Solutions</td>
-                                        <td>Systems for Intelligent Cities</td>
+                                        <td>Software &amp; Systems Security</td>
+                                        <td>Strategic Cybersecurity Management</td>
+                                        <td></td>
                                     </tr>
                                 </table>
                         </section>
@@ -105,11 +98,11 @@
                 <li class="visited first">
                     <h:link value="Search" outcome="userhome" />
                 </li>
-                <li class="visited first">
+                <!--<li class="visited first">
                     <h:link value="Search Result" outcome="TrackSearchResults" />
-                </li>
+                </li>-->
                 <li class="active">
-                    <h:link value="Track Courses" outcome="DBSTrackCourses" />
+                    <h:link value="Track Courses" outcome="Cybersecurity_temp" />
                 </li>
                 <li class="next">Skill Analysis</li>
                 <li class="">Related Jobs</li>

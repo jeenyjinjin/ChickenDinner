@@ -2,7 +2,7 @@ USE `track2career`;
 
 INSERT INTO track (track_id, track_name)
 VALUES ("T01", "Financial Technology"), ("T02", "Digital Business Solutioning"), ("T03", "Business Analytics"), 
-("T04", "Software Development"), ("T05", "Cybersecurity"), ("T06", "Artificial Intelligence"), ("Core Courses", "Core Courses"), ("Non-Track Electives","Non-Track Electives);
+("T04", "Software Development"), ("T05", "Cybersecurity"), ("T06", "Artificial Intelligence"), ("Core Courses", "Core Courses"), ("Non-Track Electives","Non-Track Electives");
 
 INSERT INTO course (course_id, track_id, course_name, instructor_name)
 VALUES ("IS112", "Core Courses", "Data Management", "ZHENG Baihua"), ("IS110", "Core Courses", "Information Systems & Innovation", "TANG Qian"), ("IS111", "Core Courses", "Introduction to Programming", "JIANG Jing"),
@@ -54,8 +54,8 @@ VALUES ("SK01", "ER Modelling", "IS112"), ("SK02", "Relational Database", "IS112
        ("SK207", "ETL", "IS417"), ("SK208", "Dimension modeling", "IS417"), ("SK209", "Architecture", "IS417"), ("SK210", "OLAP Cubes", "IS417"), ("SK211", "Reporting", "IS417"), ("SK212", "Data mining", "IS417"), ("SK213", "Decision Trees", "IS417"),
        ("SK214", "Exploratory Data Analysis", "IS424"), ("SK215", "Data Warehousing", "IS424"), ("SK216", "Data Mining", "IS424"), ("SK217", "Data Classification", "IS424"), ("SK218", "Cluster Analysis", "IS424"), ("SK219", "Association Mining", "IS424"), ("SK220", "Business Data Analysis", "IS424"),
        ("SK221", "Visual Analytics Concepts and best practice", "IS428"), ("SK222", "Univariate and Bivariate Data Analysis", "IS428"), ("SK223", "High-dimensional data visualisation", "IS428"), ("SK224", "Visualising and analysing hierachical data", "IS428"), ("SK225", "Visualising and Analysing time-series data", "IS428"), ("SK226", "Visualising and Analysing Geospatial Data", "IS428"),
-       ("SK227", "Visualising and Analysing Network Data", "IS428"), ("SK228", "Text Data Analysis and Visualisation", "IS428"), ("SK228", "Programming Data Visualisation", "IS428"), ("SK229", "Designing Web-based Visual Analytics Application", "IS428"),
-       ("SK230", "Data crawling", "IS434"), ("SK231", "Data scraping", "IS434"), ("SK232", "Social network analysis", "IS434"), ("SK233", "Natural language processing", "IS434"), ("SK234", "Data visualization", "IS434"), ("SK235", "Unstructured data", "IS434"), ("SK236", "Databases", "IS434"), ("SK237", "Python", "IS434"), ("SK238", "Consumer analytics", "IS434"), ("SK239", "Social Media APIs", "IS434"),
+       ("SK227", "Visualising and Analysing Network Data", "IS428"), ("SK228", "Text Data Analysis and Visualisation", "IS428"), ("SK229", "Programming Data Visualisation", "IS428"), ("SK230", "Designing Web-based Visual Analytics Application", "IS428"),
+       ("SK231", "Data crawling", "IS434"), ("SK232", "Data scraping", "IS434"), ("SK233", "Social network analysis", "IS434"), ("SK291", "Natural language processing", "IS434"), ("SK234", "Data visualization", "IS434"), ("SK235", "Unstructured data", "IS434"), ("SK236", "Databases", "IS434"), ("SK237", "Python", "IS434"), ("SK238", "Consumer analytics", "IS434"), ("SK239", "Social Media APIs", "IS434"),
        ("SK240", "Information extraction", "IS450"), ("SK241", "Text classification and clustering", "IS450"), ("SK242", "Natural language processing", "IS450"), ("SK243", "Language parsing and analysis", "IS450"), ("SK244", "Topic modeling", "IS450"), ("SK245", "Evaluation models", "IS450"), ("SK246", "Text visualization models", "IS450"),
        ("SK247", "Object Orientation", "IS442"), ("SK248", "UML Diagrams", "IS442"), ("SK249", "Problem solving", "IS442"), ("SK250", "Data structures", "IS442"), ("SK251", "Version control", "IS442"),
        ("SK252", "Android programming", "IS416"), ("SK253", "Mobile Sensing", "IS416"), ("SK254", "Location services", "IS416"), ("SK255", "Context awareness", "IS416"), ("SK256", "Pervasive computing", "IS416"), ("SK257", "Smart cities", "IS416"), ("SK258", "Security and privacy", "IS416"), ("SK259", "Energy efficiency", "IS416"), ("SK260", "Machine learning", "IS416"),
@@ -65,7 +65,7 @@ VALUES ("SK01", "ER Modelling", "IS112"), ("SK02", "Relational Database", "IS112
        ("SK322", "Game-theoretic analysis", "IS418"), ("SK323", "Machine learning", "IS449"), ("SK324", "Deep learning", "IS449"),
        ("SK325", "Classification and regression", "IS449"), ("SK326", "Supervised learning", "IS449"), ("SK327", "Unsupervised learning", "IS449"),
        ("SK328", "Image recognition", "IS448"), ("SK329","Intelligent systems", "IS448"),("SK330","Symmetric key data encryption", "IS443"), ("SK331","Public key data encryption","IS443"),
-       ("SK332", "Symmetric key data integrity verification", "IS443"), ("SK333","Public key data integrity verification"."IS443"), ("SK334", "Public key infrastructure","IS443"),
+       ("SK332", "Symmetric key data integrity verification", "IS443"), ("SK333","Public key data integrity verification","IS443"), ("SK334", "Public key infrastructure","IS443"),
        ("SK335","Basic access control", "IS443"), ("SK336", "Firewall and intrusion detection","IS443"),
        ("SK337","Secure communications","IS403"), ("SK338","Network defence techniques","IS403"), ("SK339","Anonymous communications","IS403"),
        ("SK340","Internet routing security","IS403"),("SK341","Network attacks","IS403"),("SK342","Identity-based encryption","IS436"),
@@ -81,20 +81,17 @@ VALUES ("SK01", "ER Modelling", "IS112"), ("SK02", "Relational Database", "IS112
        ("SK391","Create business proposal","IS404"),("SK392","Offer technology-based business innovation","IS404"),
        ("SK393","Research problem definition","IS470"),("SK394","Performance analysis","IS470"),("SK395","Literature survey","IS470"),("SK396","Complexity analysis of algorithms","IS470"), ("SK397","Security analysis of protocols","IS470"),("SK398","Practicality of solutions","IS470");
 
---course required software,  software_id/software_name
 INSERT INTO software (software_id, software_name, course_id)
 VALUES ("SW01", "mySQL", "IS112"), ("SW02", "Visio", "IS110"), ("SW03", "Python", "IS111");
 
---prerequisite course id 
 INSERT INTO prerequisite_course (prerequisite_course_id, course_id)
-VALUES ("IS111", "IS113"), ("IS110","IS210"),("IS112", "IS212"), ("IS113", "IS212"), ("IS111", "IS305"), ("IS212", "IS305")
+VALUES ("IS111", "IS113"), ("IS110","IS210"),("IS112", "IS212"), ("IS113", "IS212"), ("IS111", "IS305"), ("IS212", "IS305"),
 	   ("IS113","IS213"), ("IS212", "IS214"), ("IS213", "IS303"), ("IS210", "IS303"), ("IS443", "IS403"), ("IS213", "IS412"), ("IS213", "IS419"),("IS102", "IS418"),("IS103", "IS418"),("IS443", "IS419"),
 	   ("IS102", "IS421"), ("IS103", "IS421"), ("IS112", "IS424"),("IS213", "IS430"), ("IS213", "IS432"), ("IS443", "IS432"),("IS443", "IS436"), ("IS443", "IS437"),("IS212", "IS439"),("IS213", "IS439"),
 	   ("IS111", "IS442"),("IS213", "IS444"),("IS103", "IS448"),("IS210", "IS470"),("IS213", "IS470"),("IS212", "IS480");
---user details, note our registration page has no track_id thus students which they set academic details then put in their tracks
+
 INSERT INTO user (user_id, user_type, username, password, email, school, track_id)
 VALUES ("S1234567A", "student","GuineaPig", "tester", "test@smu.edu.sg", "NUS", ""), ("S9325681G", "admin","MoreLegit", "trustme", "mryandao@hotmail.com", "SMU", "T03");
 
---Courses which user has completed
 INSERT INTO user_course (user_course_id, course_id, user_id) 
 VALUES ("UC1", "IS112", "S1234567A"), ("UC2", "IS111", "SS9325681G");
