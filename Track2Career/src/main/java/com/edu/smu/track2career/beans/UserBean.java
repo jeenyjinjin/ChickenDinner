@@ -292,4 +292,9 @@ public class UserBean implements Serializable {
             message = "";
         }
     }
+    
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "/login.xhtml?faces-redirect=true";
+}
 }
