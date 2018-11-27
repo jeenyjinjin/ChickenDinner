@@ -296,5 +296,5 @@ public class UserBean implements Serializable {
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "/login.xhtml?faces-redirect=true";
-}
+    }
 }
