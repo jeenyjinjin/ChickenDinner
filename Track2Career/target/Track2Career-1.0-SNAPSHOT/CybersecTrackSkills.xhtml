@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Track2Career - Cybersecurity</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/skel.min.js"/>
+        <h:outputScript name="js/skel-layers.min.js"/>
+        <h:outputScript name="js/init.js"/>
+
+        <h:outputStylesheet name="css/skel.css" />
+        <h:outputStylesheet name="css/style.css" />
+        <h:outputStylesheet name="css/style-xlarge.css" />
+        <h:outputStylesheet name="css/progressbar.css"/>
+
+        <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
+    </h:head>
+    <h:body id="top">
+        <!-- Header -->
+        <header id="header" class="skel-layers-fixed">
+            <h1><a href="#">Track2Career</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><h:link value="Home" outcome="userhome" /></li>
+                    <li><h:link value="Track" outcome="userhome" /></li>
+                    <li><h:link value="Jobs" outcome="jobs" /></li>
+                    <li><h:link value="Upload" outcome="upload" /></li>
+                    <li><h:link value="Profile" outcome="profile" /></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main -->
+        <section id="main" class="wrapper style1">
+            <header class="major">
+                <h2>Cybersecurity</h2>
+            </header>
+            <div class="container">
+
+                <div class="row">
+                    <div class="4u">
+                        <h2><h:link value="Track Overview" outcome="Cybersecurity_temp" /></h2>
+                    </div>
+                    <div class="4u">
+                        <h2><h:link value="Track-specific Skills" outcome="CybersecTrackSkills" /></h2>
+                    </div>
+                    <div class="3u">
+                        <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" /></h2>
+                    </div>
+
+                    <div class="12u">
+                        <section>
+                            <p>Skills in this track:</p>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>Symmetric key data encryption</td>
+                                    <td>Vulnerability analysis</td>
+                                    <td>Network defense techniques</td>
+                                    <td>Economic analytics</td>
+                                </tr>
+                                <tr>
+                                    <td>Secure communications</td>
+                                    <td>Cybersecurity ecosystem modelling</td>
+                                    <td>Fuzzy identity based encryption</td>
+                                    <td>Symmetric key data integrity verification</td>
+                                </tr>
+                                <tr>
+                                    <td>Identity based encryption</td>
+                                    <td>Public key data encryption</td>
+                                    <td>Memory exploit</td>
+                                    <td>Anonymous communications</td>
+                                </tr>
+                                <tr>
+                                    <td>Key policy attribute based encryption</td>
+                                    <td>Internet routing security</td>
+                                    <td>Cross-discipline data analytics</td>
+                                    <td>Mobile platform security model</td>
+                                </tr>
+                            </table>
+                        </section>
+                    </div>                                            
+                </div>
+                <hr class="major" />
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="checkout-wrap">
+            <ul class="checkout-bar">
+                <li class="visited first">
+                    <h:link value="Search" outcome="userhome" />
+                </li>
+                <!--<li class="visited first">
+                    <h:link value="Search Result" outcome="TrackSearchResults" />
+                </li>-->
+                <li class="visited first">
+                    <h:link value="Track Courses" outcome="Cybersecurity_temp" />
+                </li>
+                <li class="active">
+                    <h:link value="Skill Analysis" outcome="CybersecTrackSkills" />
+                </li>
+                <li class="next">Related Jobs</li>
+            </ul>
+        </div>
+    </h:body>
+</html>

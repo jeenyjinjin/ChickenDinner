@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Track2Career</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/skel.min.js"/>
+        <h:outputScript name="js/skel-layers.min.js"/>
+        <h:outputScript name="js/select2/select2.min.js"/>
+        <h:outputScript name="js/bootstrap.min.js"/>
+        <h:outputScript name="js/html5shiv.js"/>
+        <h:outputScript name="js/respond.min.js"/>
+        <h:outputScript name="js/init.js"/>
+
+        <h:outputStylesheet name="css/bootstrap.min.css" id="bootstrap-css" />
+        <h:outputStylesheet name="css/skel.css" />
+        <h:outputStylesheet name="css/style.css" />
+        <h:outputStylesheet name="css/style-xlarge.css" />
+        <h:outputStylesheet name="css/select2/select2.min.css"/>
+        <h:outputStylesheet name="fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
+        <style>
+            body {
+                padding-top: 70px;
+                /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+            }
+
+            .othertop{margin-top:10px;}
+        </style>
+    </h:head>
+    <h:body id="top">
+        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
+        <!-- Header -->
+        <header id="header" class="skel-layers-fixed">
+            <h1>
+                <h:link value="Track2Career" outcome="userhome" />
+            </h1>
+            <nav id="nav">
+                <ul>
+                    <li><h:link value="Home" outcome="userhome" /></li>
+                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
+                    <li><h:link value="Jobs" outcome="jobs" /></li>
+                    <li><h:link value="Profile" outcome="profile" /></li>
+                    <li><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 ">
+                    <h:form class="form-horizontal">
+                        <fieldset>
+                            <legend>User profile form requirement</legend>
+                            <!-- Full Name -->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Name (Full name)</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <h:message for="fullName" style="color:red;" />
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user">
+                                            </i>
+                                        </div>
+                                        <h:inputText class="form-control input-md" value="#{user.fullName}" id="fullName" a:placeholder="Name (Full name)" required="true" requiredMessage="Name (Full name) is required"></h:inputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Primary Occupation -->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Primary Occupation</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <h:message for="occupation1" style="color:red;" />
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-briefcase"></i>
+                                        </div>
+                                        <h:inputText class="form-control input-md" value="#{user.primaryOccupation}" id="occupation1" a:placeholder="Primary Occupation" required="true" requiredMessage="Primary Occupation is required"></h:inputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Secondary Occupation -->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Secondary Occupation (if any)</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <h:message for="occupation2" style="color:red;" />
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-briefcase"></i>
+                                        </div>
+                                        <h:inputText class="form-control input-md" value="#{user.secondaryOccupation}" id="occupation2" a:placeholder="Secondary Occupation (if any)"></h:inputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Courses -->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Courses</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-graduation-cap"></i>
+                                        </div>
+                                        <h:selectManyListbox value="#{user.selectedCourses}" class="myselect" style="width:525px;" a:data-placeholder = "Your Courses"> 
+                                            <f:selectItem itemValue="" itemLabel="Your Courses" itemDisabled="true" />
+                                            <ui:repeat value="#{user.courses}" var="c" varStatus="status">
+                                                <f:selectItem itemValue="#{c.courseId}" itemLabel="#{c.courseName}"/>
+                                            </ui:repeat>
+                                            <f:selectItems value="#{user.courses}" var="course" itemValue="#{course.courseId}" itemLabel="#{course.courseName}"/>
+                                            <f:ajax event="change" listener="#{user.selectCourse}" render="@form" />
+                                        </h:selectManyListbox>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Skills -->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Skills</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-graduation-cap"></i>
+                                        </div>
+                                        <h:selectManyListbox disabled="true" id="mySkills" value="#{user.selectedSkills}" class="myselect" style="width:525px;" a:data-placeholder = "Your Skills"> 
+                                            <f:selectItem itemValue="" itemLabel="Your Skills" itemDisabled="true" /> 
+                                            <f:selectItems value="#{user.skills}" var="skill" itemValue="#{skill}" itemLabel="#{skill}"/>
+                                        </h:selectManyListbox>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Phone-->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Phone number</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <h:message for="phone" style="color:red;" />
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-phone"></i>
+                                        </div>
+                                        <h:inputText class="form-control input-md" value="#{user.phone}" id="phone" a:placeholder="Primary Phone number"></h:inputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Email Address</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <h:message for="email" style="color:red;" />
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-envelope-o"></i>
+                                        </div>
+                                        <h:inputText class="form-control input-md" value="#{user.email}" id="email" a:placeholder="Email Address"></h:inputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <h:outputLabel class="col-md-4 control-label">Working Experience (time period)</h:outputLabel>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <h:message for="work" style="color:red;" />
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <h:inputText class="form-control input-md" value="#{user.work}" id="work" a:placeholder="Working Experience (time period)"></h:inputText> </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <script>
+                            $(".myselect").select2();
+                        </script>
+                    </h:form>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" ></label>
+                        <div class="col-md-4">
+                            <h:link styleClass="btn btn-success" onclick="#{user.updateDetails()}" style="margin-right: 20px;">
+                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                                Submit
+                            </h:link>
+                            <h:link styleClass="btn btn-danger" outcome="userhome">
+                                <span class="glyphicon glyphicon-home"></span>
+                                Back to Home
+                            </h:link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>
