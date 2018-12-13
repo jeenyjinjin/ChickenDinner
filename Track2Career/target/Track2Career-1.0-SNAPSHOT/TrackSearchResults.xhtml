@@ -24,11 +24,12 @@
         <h:outputStylesheet name="css/style.css" />
         <h:outputStylesheet name="css/style-xlarge.css" />
         <h:outputStylesheet name="css/progressbar.css"/>
-
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
     </h:head>
     <h:body id="top">
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
+        <f:event type="preRenderView" listener="#{search.hasSearchItem}" />
         <header id="header" class="skel-layers-fixed">
             <h1><a href="#">Track2Career</a></h1>
             <nav id="nav">
@@ -37,7 +38,8 @@
                     <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
                     <li><h:link value="Jobs" outcome="jobs" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
-                    <li><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                    <li style="#{user.user.userType eq 'Admin' ? '' : 'display: none;'}"><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                    <li><h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form></li>
                 </ul>
             </nav>
         </header>
@@ -82,7 +84,7 @@
                     <ui:repeat value="#{flash.keep.achievedList}" var="row">
                         <tr>
                             <ui:repeat value="#{row}" var="item">
-                                <td>#{item.skillName}</td>
+                                <td>#{item.getName()}</td>
                             </ui:repeat>
                         </tr>
                     </ui:repeat>
@@ -95,7 +97,7 @@
                     <ui:repeat value="#{flash.keep.unachievedList}" var="row">
                         <tr>
                             <ui:repeat value="#{row}" var="item">
-                                <td>#{item.skillName}</td>
+                                <td style="#{item.isIsImportant() ? 'text-decoration: underline; font-weight: bold;' : ''}">#{item.getName()}</td>
                             </ui:repeat>
                         </tr>
                     </ui:repeat>

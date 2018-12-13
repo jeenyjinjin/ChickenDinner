@@ -18,7 +18,7 @@
         <h:outputStylesheet name="css/style.css" />
         <h:outputStylesheet name="css/style-xlarge.css" />
         <h:outputStylesheet name="css/progressbar.css"/>
-        
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
     </h:head>
     <h:body id="top">
@@ -32,7 +32,8 @@
                     <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
                     <li><h:link value="Jobs" outcome="jobs" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
-                    <li><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                    <li style="#{user.user.userType eq 'Admin' ? '' : 'display: none;'}"><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                    <li><h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form></li>
                 </ul>
             </nav>
         </header>
@@ -47,13 +48,8 @@
                     <div class="4u">
                         <h2><h:link value="Track Overview" outcome="DBSTrackCourses" /></h2>
                     </div>
-<<<<<<< HEAD:Track2Career/target/Track2Career-1.0-SNAPSHOT/DBSTrackCourses.xhtml
                     <div class="4u">
                         <h2><h:link value="Track-specific Skills" outcome="TrackSpecificSkills" /></h2>
-=======
-                    <div class="5u">
-                        <h2><h:link value="Track-specific Skills" outcome="DBSTrackSkills" /></h2>
->>>>>>> f14ec039414edd2edc032a20cca1bb88694333bd:Track2Career/web/DBSTrackCourses.xhtml
                     </div>
                     <div class="3u">
                         <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" /></h2>

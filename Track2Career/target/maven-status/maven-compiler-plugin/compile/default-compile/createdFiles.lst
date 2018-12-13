@@ -9,6 +9,7 @@ com\edu\smu\track2career\beans\UserBean.class
 com\edu\smu\track2career\entity\Software_.class
 com\edu\smu\track2career\entity\Track.class
 com\edu\smu\track2career\entity\User_.class
+com\edu\smu\track2career\entity\Custom.class
 com\edu\smu\track2career\beans\SearchBean.class
 com\edu\smu\track2career\entity\SoftwarePK_.class
 com\edu\smu\track2career\beans\CourseBean.class

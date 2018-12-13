@@ -50,7 +50,8 @@
                     <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
                     <li><h:link value="Jobs" outcome="jobs" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
-                    <li><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                    <li style="#{user.user.userType eq 'Admin' ? '' : 'display: none;'}"><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
+                    <li><h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form></li>
                 </ul>
             </nav>
         </header>

@@ -192,7 +192,6 @@ public class UserBean implements Serializable {
     }
 
     public void selectCourse(AjaxBehaviorEvent e) {
-        System.out.println(selectedCourses);
         Set<String> skillList = new TreeSet<>();
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
@@ -201,7 +200,6 @@ public class UserBean implements Serializable {
             query.setParameter(1, course);
 
             List<String> skillResults = query.getResultList();
-            System.out.println(skillResults);
             skillList.addAll(skillResults);
         }
         em.close();

@@ -5,19 +5,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
 public class ExcelExtractorManager {
 
     private static LinkedHashMap<String, Integer> map;
-    
+
     /**
-     * description  This method attempts to convert an uploaded stream object 
-     *              to a XSSFWorkbook object
+     * description This method attempts to convert an uploaded stream object to
+     * a XSSFWorkbook object
+     *
      * @param input (java.io.InputStream)
      * @return org.​apache.​poi.​ss.​usermodel.Workbook
-     * @throws IOException 
+     * @throws IOException
      */
     public static Workbook streamToWorkbook(InputStream input) throws IOException {
         return new XSSFWorkbook(input);
@@ -90,7 +92,7 @@ public class ExcelExtractorManager {
         int trackNo = 1;
         int skillNo = 1;
         int softwareNo = 1;
-        
+
         Track trackObj = null;
 
         ArrayList<String> courseCodeList = new ArrayList<>();
@@ -122,7 +124,7 @@ public class ExcelExtractorManager {
                         String track = value.contains("(") ? value.split("\\(")[0] : value;
                         track = track.replaceAll("\n", "");
                         track = track.trim();
-                        
+
                         String trackId = String.format("T%03d", trackNo++);
 
                         trackObj = new Track();
@@ -159,17 +161,17 @@ public class ExcelExtractorManager {
                 course.setTrackId(trackObj);
 
                 courseList.add(course);
-                
-                for (String skillName: skills) {
+
+                for (String skillName : skills) {
                     String skillId = String.format("SK%03d", skillNo++);
-                    Skill skill = new Skill(skillId, courseCode);                    
+                    Skill skill = new Skill(skillId, courseCode);
                     skill.setSkillName(skillName);
                     skillList.add(skill);
                 }
-                
-                for (String softwareName: softwares) {
+
+                for (String softwareName : softwares) {
                     String softwareId = String.format("SO%03d", softwareNo++);
-                    Software software = new Software(softwareId, courseCode);                    
+                    Software software = new Software(softwareId, courseCode);
                     software.setSoftwareName(softwareName);
                     softwareList.add(software);
                 }
@@ -179,22 +181,36 @@ public class ExcelExtractorManager {
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
 
+        Query query1 = em.createQuery("DELETE FROM UserCourse");
+        Query query2 = em.createQuery("DELETE FROM PrerequisiteCourse");
+        Query query3 = em.createQuery("DELETE FROM Software");
+        Query query4 = em.createQuery("DELETE FROM Skill");
+        Query query5 = em.createQuery("DELETE FROM Course");
+        Query query6 = em.createQuery("DELETE FROM Track");
+
+        query1.executeUpdate();
+        query2.executeUpdate();
+        query3.executeUpdate();
+        query4.executeUpdate();
+        query5.executeUpdate();
+        query6.executeUpdate();
+
         for (Track track : trackList) {
             em.persist(track);
         }
-        
+
         for (Course course : courseList) {
             em.persist(course);
         }
-        
+
         for (Skill skill : skillList) {
             em.persist(skill);
         }
-        
+
         for (Software software : softwareList) {
             em.persist(software);
         }
-        
+
         em.getTransaction().commit();
         em.close();
     }
