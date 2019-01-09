@@ -9,7 +9,7 @@ USE `track2career`;
 
 /* Table creation STARTS */
 CREATE TABLE track (
-	track_id CHAR(20) NOT NULL,
+	track_id CHAR(4) NOT NULL,
 	track_name VARCHAR(200) NOT NULL,
 	
 	CONSTRAINT track_pk PRIMARY KEY (track_id)
@@ -17,9 +17,10 @@ CREATE TABLE track (
 
 CREATE TABLE course (
 	course_id VARCHAR(10) NOT NULL,
-	track_id CHAR(20) NOT NULL,
+	track_id CHAR(4) NOT NULL,
 	course_name VARCHAR(200) NOT NULL,
 	instructor_name VARCHAR(100) NOT NULL,
+	description TEXT NOT NULL,
 	
 	CONSTRAINT course_pk PRIMARY KEY (course_id),
 	CONSTRAINT course_fk FOREIGN KEY (track_id) REFERENCES track (track_id)
@@ -58,7 +59,7 @@ CREATE TABLE user (
 	password VARCHAR(100) NOT NULL,
 	email VARCHAR(100) NOT NULL,
 	school VARCHAR(100) NOT NULL,
-	track_id CHAR(20),
+	track_id CHAR(4),
 	
 	CONSTRAINT user_pk PRIMARY KEY (user_id),
 	CONSTRAINT user_fk FOREIGN KEY (track_id) REFERENCES track (track_id)
