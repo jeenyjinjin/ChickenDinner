@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -54,6 +55,12 @@ public class Course implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "instructor_name")
     private String instructorName;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "description")
+    private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
     private Collection<UserCourse> userCourseCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
@@ -73,10 +80,11 @@ public class Course implements Serializable {
         this.courseId = courseId;
     }
 
-    public Course(String courseId, String courseName, String instructorName) {
+    public Course(String courseId, String courseName, String instructorName, String description) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.instructorName = instructorName;
+        this.description = description;
     }
 
     public String getCourseId() {
@@ -101,6 +109,14 @@ public class Course implements Serializable {
 
     public void setInstructorName(String instructorName) {
         this.instructorName = instructorName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @XmlTransient

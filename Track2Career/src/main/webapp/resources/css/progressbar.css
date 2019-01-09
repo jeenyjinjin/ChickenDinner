@@ -112,6 +112,11 @@ ul.checkout-bar a {
     top: -50px;
     z-index: 0;
   }
+  
+  .checkout-bar li.last:after {
+      width: 62% !important;
+      border-radius: 15px;
+  }
 
   .checkout-wrap {
     margin: 80px auto;
@@ -150,7 +155,7 @@ ul.checkout-bar a {
     margin: 50px 0 0;
     padding: 0;
     text-align: center;
-    width: 19%;
+    width: 24%;
   }
   ul.checkout-bar li:before {
     height: 45px;

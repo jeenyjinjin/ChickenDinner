@@ -2,9 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
-        <title>Track2Career - Digital Business Solutioning</title>
+        <title>Track2Career - #{search.track}</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
@@ -23,6 +24,7 @@
     </h:head>
     <h:body id="top">
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
+        <f:event type="preRenderView" listener="#{search.hasSearchItem}" />
         <!-- Header -->
         <header id="header" class="skel-layers-fixed">
             <h1><a href="#">Track2Career</a></h1>
@@ -41,18 +43,20 @@
         <!-- Main -->
         <section id="main" class="wrapper style1">
             <header class="major">
-                <h2>Digital Business Solutioning</h2>
+                <h:link value="Search Other Tracks" outcome="userhome" style="position: absolute; left: 165px; margin-top: 10px;" />
+                <h2>#{search.track}</h2>
             </header>
+            
             <div class="container">
                 <div class="row">
                     <div class="4u">
-                        <h2><h:link value="Track Overview" outcome="DBSTrackCourses" /></h2>
+                        <h2><h:link value="Track Overview" outcome="TrackDetails" /></h2>
                     </div>
                     <div class="4u">
-                        <h2><h:link value="Track-specific Skills" outcome="TrackSpecificSkills" /></h2>
+                        <h2><h:link value="Track-specific Skills" outcome="TrackSkills" /></h2>
                     </div>
                     <div class="3u">
-                        <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" /></h2>
+                        <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" style="font-weight: bold;" /></h2>
                     </div>
                     <div class="12u">
                         <section>
@@ -80,7 +84,6 @@
                         </section>
                     </div>
                 </div>
-                <hr class="major" />
             </div>
         </section>
 
@@ -91,13 +94,14 @@
                     <h:link value="Search" outcome="userhome" />
                 </li>
                 <li class="visited first">
-                    <h:link value="Search Result" outcome="TrackSearchResults" />
+                    <h:link value="Track Overview" outcome="TrackDetails" />
                 </li>
                 <li class="visited first">
-                    <h:link value="Track Courses" outcome="DBSTrackCourses" />
+                    <h:link value="Track Specific Skills" outcome="TrackSkills" />
                 </li>
-                <li class="active">Skill Analysis</li>
-                <li class="next">Related Jobs</li>
+                <li class="active last">
+                    <h:link value="Track Related Jobs" outcome="TrackRelatedJobs" />
+                </li>
             </ul>
         </div>
     </h:body>

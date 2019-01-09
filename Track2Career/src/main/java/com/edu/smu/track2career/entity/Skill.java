@@ -107,7 +107,7 @@ public class Skill implements Serializable {
 
     @Override
     public String toString() {
-        return "com.edu.smu.track2career.entity.Skill[ skillPK=" + skillPK + ", name=" + skillName + "]";
+        return "com.edu.smu.track2career.entity.Skill[ skillPK=" + skillPK + " ]";
     }
     
 }

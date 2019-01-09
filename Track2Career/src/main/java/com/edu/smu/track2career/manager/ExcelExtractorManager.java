@@ -44,7 +44,7 @@ public class ExcelExtractorManager {
                 Cell currentCell = cellIterator.next();
 
                 String value = currentCell.getStringCellValue();
-
+                
                 // Check if the cell value contains "As at"
                 if (value.contains("As at")) {
                     break;
@@ -58,12 +58,14 @@ public class ExcelExtractorManager {
                     map.put("courseTitle", map.get("courseTitle") == null ? 1 : map.get("courseTitle") + 1);
                 } else if (value.toLowerCase().contains("coordinator")) {
                     map.put("courseCoordinator", map.get("courseCoordinator") == null ? 1 : map.get("courseCoordinator") + 1);
-                } else if (value.toLowerCase().contains("skillsfuture")) {
-                    break;
-                } else if (value.toLowerCase().contains("competency")) {
+                } else if (value.toLowerCase().contains("skills competency")) {
                     map.put("skillsCompetency", map.get("skillsCompetency") == null ? 1 : map.get("skillsCompetency") + 1);
                 } else if (value.toLowerCase().contains("software")) {
                     map.put("software", map.get("software") == null ? 1 : map.get("software") + 1);
+                } else if (value.toLowerCase().contains("skillsfuture")) {
+                    map.put("skillsfuture", map.get("skillsfuture") == null ? 1 : map.get("skillsfuture") + 1);
+                } else if (value.toLowerCase().contains("description")) {
+                    map.put("description", map.get("description") == null ? 1 : map.get("description") + 1);
                 }
             }
 
@@ -112,6 +114,7 @@ public class ExcelExtractorManager {
             String courseCoord = "";
             List<String> skills = new ArrayList<>();
             List<String> softwares = new ArrayList<>();
+            String description = "";
             outerloop:
             while (keys.hasNext()) {
                 String key = keys.next();
@@ -120,6 +123,7 @@ public class ExcelExtractorManager {
                 for (int i = 0; i < count; i++) {
                     Cell currentCell = row.getCell(cellIndex++, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     String value = currentCell.getStringCellValue();
+                    
                     if (key.equals("track") && !value.isEmpty()) {
                         String track = value.contains("(") ? value.split("\\(")[0] : value;
                         track = track.replaceAll("\n", "");
@@ -150,6 +154,9 @@ public class ExcelExtractorManager {
                         skills.add(value);
                     } else if (key.equals("software") && !value.isEmpty()) {
                         softwares.add(value);
+                    } else if (key.equals("description") && !value.isEmpty()) {
+                        description = value.trim();
+                        break;
                     }
                 }
             }
@@ -158,6 +165,7 @@ public class ExcelExtractorManager {
                 course.setCourseId(courseCode);
                 course.setCourseName(courseTitle);
                 course.setInstructorName(courseCoord);
+                course.setDescription(description);
                 course.setTrackId(trackObj);
 
                 courseList.add(course);

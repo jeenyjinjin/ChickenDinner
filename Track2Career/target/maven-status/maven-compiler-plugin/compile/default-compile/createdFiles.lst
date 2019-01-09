@@ -10,9 +10,11 @@ com\edu\smu\track2career\entity\Software_.class
 com\edu\smu\track2career\entity\Track.class
 com\edu\smu\track2career\entity\User_.class
 com\edu\smu\track2career\entity\Custom.class
+com\edu\smu\track2career\manager\RestfulManager.class
 com\edu\smu\track2career\beans\SearchBean.class
 com\edu\smu\track2career\entity\SoftwarePK_.class
 com\edu\smu\track2career\beans\CourseBean.class
+com\edu\smu\track2career\manager\TFIDFManager.class
 com\edu\smu\track2career\manager\PersistenceManager.class
 com\edu\smu\track2career\entity\PrerequisiteCoursePK_.class
 com\edu\smu\track2career\entity\Track_.class
@@ -26,3 +28,4 @@ com\edu\smu\track2career\manager\ExcelExtractorManager.class
 com\edu\smu\track2career\entity\PrerequisiteCourse_.class
 com\edu\smu\track2career\entity\User.class
 com\edu\smu\track2career\entity\UserCourse_.class
+com\edu\smu\track2career\manager\StringManager.class
