@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Track2Career - Upload</title>
         <meta charset="UTF-8" />
@@ -14,6 +15,13 @@
         <h:outputScript name="js/skel.min.js"/>
         <h:outputScript name="js/skel-layers.min.js"/>
         <h:outputScript name="js/init.js"/>
+        
+        <h:outputStylesheet name="css/signup.css" />
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/font-awesome.min.css" />
+             
+        <h:outputStylesheet name="css/util.css"/>
+        <h:outputStylesheet name="css/main.css"/>
         
         <h:outputStylesheet name="css/skel.css" />
         <h:outputStylesheet name="css/style.css" />
@@ -40,10 +48,12 @@
         </header>
 
         <div class="container-login100">
-        
-        <h:form enctype="multipart/form-data">
+        <div class="wrap-login100" id="login-box">
+        <h:form enctype="multipart/form-data" >
             <fieldset>
-                <legend>CSV File Upload</legend>
+                <span class="login100-form-title p-b-34 p-t-27">
+                    Excel Upload
+                </span>  
                 <h:inputHidden id="MAX_FILE_SIZE" value="300000" />
 
                 <div>
@@ -51,19 +61,26 @@
                     <div id="filedrag">or drop files here</div>
                 </div>
                 <br/>
-                <div id="submitbutton">
-                    <h:commandButton value="Upload Files" action="#{bootstrap.processFile}"/>
-                    <span style="color: green;">#{bootstrap.successMessage}</span>
-                    <span style="color: red;">#{bootstrap.errorMessage}</span>
+                
+                <div>
+                    <center><span style="color: green;">#{bootstrap.successMessage}</span></center>
+                    <center><span style="color: red;">#{bootstrap.errorMessage}</span></center>
                 </div>
+
+                <div class="container-login100-form-btn">
+                                      
+                    <br></br>
+                    <p:commandButton class="login100-form-btn" ajax="false" value="Upload file" action="#{bootstrap.processFile}" style="color: #000;"/>
+                </div>
+                
             </fieldset>
         </h:form>
-            
+        </div>
         </div>
 
-        <div id="messages">
+        <!--div id="messages">
             <p>Status Messages</p>
-        </div>
+        </div-->
 
         <h:outputScript name="js/filedrag.js"/>
     </h:body>

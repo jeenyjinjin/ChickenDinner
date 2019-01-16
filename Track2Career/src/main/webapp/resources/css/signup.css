@@ -47,7 +47,7 @@ body::before {
   width: 600px;
   height: 510px;
   background: #061b3d;
-  border-radius: 2px;
+  border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
