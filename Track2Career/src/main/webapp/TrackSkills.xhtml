@@ -29,12 +29,12 @@
         <f:event type="preRenderView" listener="#{search.hasSearchItem}" />
         <!-- Header -->
         <header id="header" class="skel-layers-fixed">
-            <h1><a href="#">Track2Career</a></h1>
+            <h1>
+                <h:link value="Track2Career" outcome="userhome" />
+            </h1>
             <nav id="nav">
                 <ul>
                     <li><h:link value="Home" outcome="userhome" /></li>
-                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
-                    <li><h:link value="Jobs" outcome="jobs" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
                     <li style="#{user.user.userType eq 'Admin' ? '' : 'display: none;'}"><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
                     <li><h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form></li>

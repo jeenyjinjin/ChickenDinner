@@ -24,8 +24,9 @@
         <h:outputStylesheet name="css/skel.css" />
         <h:outputStylesheet name="css/style.css" />
         <h:outputStylesheet name="css/style-xlarge.css" />
+        <h:outputStylesheet name="css/progressbar.css"/>
         <h:outputStylesheet name="css/select2/select2.min.css"/>
-        <h:outputStylesheet name="fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>
+        <h:outputStylesheet name="fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>       
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <style>
             body {
@@ -35,6 +36,7 @@
 
             .othertop{margin-top:10px;}
         </style>
+        <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
     </h:head>
     <h:body id="top">
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
@@ -46,8 +48,6 @@
             <nav id="nav">
                 <ul>
                     <li><h:link value="Home" outcome="userhome" /></li>
-                    <li><h:link value="Track" outcome="DBSTrackCourses" /></li>
-                    <li><h:link value="Jobs" outcome="jobs" /></li>
                     <li><h:link value="Profile" outcome="profile" /></li>
                     <li style="#{user.user.userType eq 'Admin' ? '' : 'display: none;'}"><h:link value="Upload" outcome="upload" rendered="#{user.user.userType eq 'Admin'}" /></li>
                     <li><h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form></li>

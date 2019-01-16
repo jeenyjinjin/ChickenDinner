@@ -3,52 +3,75 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Material design sign up form</title>
+        <title>Track2Career - Signup</title>
+        
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
 
         <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/animsition/js/animsition.min.js"/>
+        <h:outputScript name="js/bootstrap/js/popper.js"/>
+        <h:outputScript name="js/bootstrap.min.js"/>
         <h:outputScript name="js/select2/select2.min.js"/>
+        <h:outputScript name="js/daterangepicker/moment.min.js"/>
+        <h:outputScript name="js/daterangepicker/daterangepicker.js"/>
+        <h:outputScript name="js/countdowntime/countdowntime.js"/>
+        <h:outputScript name="js/main.js"/>
 
         <h:outputStylesheet name="css/signup.css" />
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/font-awesome.min.css" />
+        <h:outputStylesheet name="fonts/iconic/css/material-design-iconic-font.min.css" />
+        <h:outputStylesheet name="css/animate/animate.css" />
+        <h:outputStylesheet name="css/css-hamburgers/hamburgers.min.css" />
+        <h:outputStylesheet name="css/animsition/css/animsition.min.css" />
         <h:outputStylesheet name="css/select2/select2.min.css"/>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
+        <h:outputStylesheet name="css/daterangepicker/daterangepicker.css"/>
+        <h:outputStylesheet name="css/util.css"/>
+        <h:outputStylesheet name="css/main.css"/>
     </h:head>
-    <h:body style="background-image: url('#{resource['images/careerbackground.jpg']}');">
-        <div id="login-box">
+    <h:body >
+        <div class="limiter">
             <f:event type="preRenderView" listener="#{user.checkMessage}" />
-            <div class="left">
-                <h:form>
-                    <h:panelGrid columns="1">
-                        <h1>Sign up</h1>
-                        <font color="red">#{signup.message}</font>
-                        <h:message for="nric" style="color:red;" />
-                        <h:inputText value="#{signup.nric}" id="nric" a:placeholder="NRIC/FIN No." required="true" requiredMessage="NRIC is required"></h:inputText>
-
+            <div class="container-login100"  style="background-image: url('#{resource['images/careerbackground.jpg']}');">
+                <div class="wrap-login100" id="login-box">
+                
+                    <div class="left">
+                        <h:form class="login100-form validate-form">
+                            
+                                <span class="login100-form-title p-b-34 p-t-27">
+                                    Sign up
+                                </span>                                           
+                            
+                                <h:message for="nric" style="color:red;" />
+                                <h:inputText value="#{signup.nric}" id="nric" a:placeholder="NRIC/FIN No." required="true" requiredMessage="NRIC is required" class="input100"></h:inputText>
+              
+                                <h:message for="username" style="color:red;" />
+                                <h:inputText value="#{signup.username}" id="username" a:placeholder="Username" required="true" requiredMessage="Username is required" class="input100"></h:inputText>
+                                               
+                                <h:message for="password" style="color:red;" />
+                                <h:inputSecret value="#{signup.password}" id="password" a:placeholder="Password" required="true" requiredMessage="Password is required" class="input100"></h:inputSecret>
+                                               
+                                <h:message for="email" style="color:red;" />
+                                <h:inputText value="#{signup.email}" id="email" a:placeholder="E-mail" required="true" requiredMessage="Email is required" class="input100"></h:inputText>
                         
-                        <h:message for="username" style="color:red;" />
-                        <h:inputText value="#{signup.username}" id="username" a:placeholder="Username" required="true" requiredMessage="Username is required"></h:inputText>
+                                <h:message for="school" style="color:red;" />
+                                <h:selectOneListbox  value="#{signup.school}" id="school" class="myselect" style="width: 100%;" required="true" requiredMessage="Please select a school">
+                                    <f:selectItem itemValue="" itemLabel="Select School" itemDisabled="true" />
+                                    <f:selectItems value="#{signup.schools}" var="school" itemValue="#{school}" itemLabel="#{school}"/>
+                                </h:selectOneListbox>
                         
-                        
-                        <h:message for="password" style="color:red;" />
-                        <h:inputSecret value="#{signup.password}" id="password" a:placeholder="Password" required="true" requiredMessage="Password is required"></h:inputSecret>
-                        
-                        
-                        <h:message for="email" style="color:red;" />
-                        <h:inputText value="#{signup.email}" id="email" a:placeholder="E-mail" required="true" requiredMessage="Email is required"></h:inputText>
-                        
-                        
-                        <h:message for="school" style="color:red;" />
-                        <h:selectOneListbox  value="#{signup.school}" id="school" class="myselect" style="width: 100%;" required="true" requiredMessage="Please select a school">
-                            <f:selectItem itemValue="" itemLabel="Select School" itemDisabled="true" />
-                            <f:selectItems value="#{signup.schools}" var="school" itemValue="#{school}" itemLabel="#{school}"/>
-                        </h:selectOneListbox>
-                        
-                        <h:message for="school" style="color:red;" />
-                        <h:selectOneListbox  value="#{signup.type}" id="type" class="myselect" style="width: 100%;" required="true" requiredMessage="Please select a school">
-                            <f:selectItem itemValue="" itemLabel="Select Role" itemDisabled="true" />
-                            <f:selectItems value="#{signup.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type}"/>
-                        </h:selectOneListbox>
+                                <h:message for="school" style="color:red;" />
+                                <h:selectOneListbox  value="#{signup.type}" id="type" class="myselect" style="width: 100%;" required="true" requiredMessage="Please select a school">
+                                    <f:selectItem itemValue="" itemLabel="Select Role" itemDisabled="true" />
+                                    <f:selectItems value="#{signup.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type}"/>
+                                </h:selectOneListbox>
                         <!--
                         <br/>
                         <h:outputLabel value="My Skills" />
@@ -57,24 +80,31 @@
                             <f:selectItems value="#{signup.skills}" var="skill" itemValue="#{skill}" itemLabel="#{skill}"/>
                         </h:selectManyListbox>
                         -->
-                        <h:commandButton value="Sign me up" action="#{signup.submit}" />
-                    </h:panelGrid>
-                </h:form>
+                                <br/><br/>
+                                <div class="container-login100-form-btn">
+                                    <p:commandButton class="login100-form-btn" ajax="false" value="Sign me up" action="#{signup.submit}" style="color: #000;"/>
+                                </div>
+                            
+                        </h:form>
+                    </div>
+
+                    <div class="right">
+                        <span class="loginwith">Sign in with<br />social network</span>
+
+                        <button class="social-signin facebook">Log in with facebook</button>
+
+                        <button class="social-signin google">Log in with Google+</button>
+
+                        <h:link value="Back to login" outcome="login" class="txt1"/>
+                    </div>
+                    <!--<div class = "bottomright"><a href = "userhome.jsf">Skip</a></div>-->
+                    <div class="or">OR</div>
+                    <script type="text/javascript">
+                        $(".myselect").select2();
+                    </script>
+                </div>
             </div>
-
-            <div class="right">
-                <span class="loginwith">Sign in with<br />social network</span>
-
-                <button class="social-signin facebook">Log in with facebook</button>
-
-                <button class="social-signin google">Log in with Google+</button>
-
-            </div>
-            <!--<div class = "bottomright"><a href = "userhome.jsf">Skip</a></div>-->
-            <div class="or">OR</div>
-            <script type="text/javascript">
-                $(".myselect").select2();
-            </script>
         </div>
+        
     </h:body>
 </html>
