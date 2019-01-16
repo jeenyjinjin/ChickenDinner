@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.*;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.json.JsonArrayBuilder;
+import javax.json.Json;
 
 @ManagedBean(name = "search", eager = true)
 @SessionScoped
@@ -30,6 +33,8 @@ public class SearchBean {
     public List<Course> courseList;
     public ArrayList<ArrayList<String>> achievedList;
     public ArrayList<ArrayList<Custom>> unachievedList;
+    public javax.json.JsonObject courseInTree;
+    public javax.json.JsonObject skillInBubble;
 
     public SearchBean() {
         EntityManager em = PersistenceManager.getEntityManager();
@@ -151,6 +156,24 @@ public class SearchBean {
 
     public void setUnachievedList(ArrayList<ArrayList<Custom>> unachievedList) {
         this.unachievedList = unachievedList;
+    }
+    
+    public void setCourseInTree(javax.json.JsonObject courseInTree){
+        this.courseInTree=courseInTree;
+    }
+    
+    public javax.json.JsonObject getCourseInTree(){
+        return courseInTree;
+    }
+    
+    
+    public void setSkillInBubble(javax.json.JsonObject skillInBubble){
+        this.skillInBubble=skillInBubble;
+        
+    }
+    
+    public javax.json.JsonObject getSkillInBubble(){
+        return skillInBubble;
     }
 
     public List<String> completeText(String query) {
@@ -334,6 +357,64 @@ public class SearchBean {
             if (temp1 != null && !temp1.isEmpty()) {
                 unachievedList.add(temp1);
             }
+            
+            //Return visualisable json data
+            //Naming conflicts in jsonx.json library and gson.json library
+            //the main logic is To retrieve relative course and skill information based on the track submitted
+            //When the data is returned to TrackDetails.xhtml, a var object is used to get and store the json data on the frontend
+            //The json data is then visualized using the imported dndTree.js in the <div = "tree-container">, visualization library is d3.js
+            
+            ArrayList<ArrayList<String>> courseInfo = new ArrayList<>();
+            //Extract course name from the list of courses...still using java7, cannot method reference:(
+            ArrayList<String> courseNameList = new ArrayList<String>();
+            for (Course currentCourse : courseList) {
+                ArrayList<String> toAdd = new ArrayList<String>();
+
+                toAdd.add(currentCourse.getCourseId());
+                toAdd.add(currentCourse.getCourseName());
+                courseInfo.add(toAdd);
+            }
+
+            //Put courses and its associated skills into an array of array courseName[0], courseID[1],skill[2...end]
+            for (ArrayList<String> courseOverview : courseInfo) {
+                String currentCourseID = courseOverview.get(0);
+                TypedQuery<String> relatedSkillQuery = em.createQuery("SELECT s.skillName FROM Skill s WHERE s.skillPK.courseId = ?1", String.class);
+                relatedSkillQuery.setParameter(1, currentCourseID);
+                List<String> courseRelatedSkills = relatedSkillQuery.getResultList();
+                for (String currentSkillName : courseRelatedSkills) {
+                    courseOverview.add(currentSkillName);
+                }
+            }
+            //The JsonArrayBuilder class is in conflict with the imported gson library(here uses javax.json)
+            
+            javax.json.JsonArrayBuilder toInclude = javax.json.Json.createArrayBuilder();
+            for (ArrayList<String> detailedCourse : courseInfo) {
+                String courseCode = detailedCourse.get(0);
+                String courseName = detailedCourse.get(1);
+
+                javax.json.JsonArrayBuilder skillSet = javax.json.Json.createArrayBuilder();
+                for (int counter = 2; counter < detailedCourse.size(); counter++) {
+                    //setting the size of a circle to cope for the frontend needs(e.g: bubble size)
+                    int min = 1000;
+                    int max = 2000;
+                    int randomSize = ThreadLocalRandom.current().nextInt(min, max + 1);
+                    javax.json.JsonObject skilltemp = javax.json.Json.createObjectBuilder().add("name", detailedCourse.get(counter)).add("size", randomSize).build();
+
+                    skillSet.add(skilltemp);
+
+                }
+                
+                javax.json.JsonObject middleLevelCourse = Json.createObjectBuilder().add("name", courseName).add("children", skillSet).build();
+                
+                toInclude.add(middleLevelCourse);
+
+            }
+            javax.json.JsonArray toAdd = toInclude.build();
+            //construct the highest level returned object in JSON object
+            javax.json.JsonObject toReturnInfo = Json.createObjectBuilder().add("name", track).add("children", toAdd).build();
+            setCourseInTree(toReturnInfo);
+            
+            //new Method in bubble visualisation on skills distribution
 
             FacesContext.getCurrentInstance().getExternalContext().redirect("TrackDetails.jsf");
         } catch (IOException e) {

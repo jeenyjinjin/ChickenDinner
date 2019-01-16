@@ -15,6 +15,9 @@
         <h:outputScript name="js/skel-layers.min.js"/>
         <h:outputScript name="js/init.js"/>
         <h:outputScript name="js/tracksspecificskills.js"/>
+        
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <h:outputScript name="js/forcebubble.js"/>
 
         <h:outputStylesheet name="css/bootstrap.min.css" id="bootstrap-css" />
         <h:outputStylesheet name="css/skel.css" />
@@ -23,6 +26,13 @@
         <h:outputStylesheet name="css/progressbar.css"/>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
+        <h:outputScript>
+            //<![CDATA[
+            
+            
+            var b = [{text: "Route planning (e.g. self driving cars)", size: 30, group: 1},{text: "Deep learning for image processing", size: 30, group: 1},{text: "Deep learning for natural language processing", size: 30, group: 1},{text: "Reasoning  and planning with uncertainty", size: 30, group: 2},{text: "(Deep) Reinforcement learning", size: 50, group: 2},{text: "Bayesian networks", size: 25, group: 2},{text: "fas", size: 30, group: 2},{text: "Design and develop agent-based models", size: 30, group: 2},{text: "Create and validate agent-based stimulations", size: 30, group: 1},{text: "Utilize ABMS in policy and operational decisions", size: 30, group: 2},{text: "Game-theoretic analysis", size: 50, group: 2},{text: "Machine learning", size: 30, group: 2},{text: "Deep learning", size: 50, group: 2},{text: "Classification & Regression", size: 23, group: 1},{text: "Supervised learning", size: 30, group: 2},{text: "Unsupervised learning", size: 15, group: 2},{text: "Image recognition", size: 50, group: 2},{text: "Intelligent systems", size: 30, group: 1}];
+            //]]>
+        </h:outputScript>
     </h:head>
     <h:body id="top">
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
@@ -60,7 +70,9 @@
                     <div class="3u">
                         <h2><h:link value="Related Jobs" outcome="TrackRelatedJobs" /></h2>
                     </div>
+                    <div id ="bubble-container"></div>
                     <div class="12u">
+                        
                         <section>
                             <div class="col-xs-12 col-sm-12 col-md-6">
                                 <h3>Skills achieved from this Track</h3>
