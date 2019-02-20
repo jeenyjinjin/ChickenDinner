@@ -74,3 +74,11 @@ CREATE TABLE user_course (
 	CONSTRAINT user_course_fk1 FOREIGN KEY (user_id) REFERENCES user (user_id),
 	CONSTRAINT user_course_fk2 FOREIGN KEY (course_id) REFERENCES course (course_id)
 );
+
+create table access_summary(
+  access_time datetime not null,
+  school varchar(20) not null,
+  access_type varchar(1) not null,
+  track_name VARCHAR(200),
+  job_name varchar(200)
+);

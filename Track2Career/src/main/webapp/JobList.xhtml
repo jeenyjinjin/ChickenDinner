@@ -21,15 +21,13 @@
         <h:outputStylesheet name="css/style.css" />
         <h:outputStylesheet name="css/style-xlarge.css" />
         <h:outputStylesheet name="css/progressbar.css"/>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/track.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <link href='https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700' rel='stylesheet' type='text/css'/>
     </h:head>
     <h:body id="top">
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
         <header id="header" class="skel-layers-fixed">
-            <h1>
-                <h:link value="Track2Career" outcome="userhome" />
-            </h1>
+            <h1><a href="#">Track2Career</a></h1>
             <nav id="nav">
                 <ul>
                     <li><h:link value="Home" outcome="userhome" /></li>

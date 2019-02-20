@@ -1,8 +1,7 @@
 package com.edu.smu.track2career.beans;
 
 import com.edu.smu.track2career.entity.Course;
-import com.edu.smu.track2career.entity.Custom;
-import com.edu.smu.track2career.entity.Skill;
+import com.edu.smu.track2career.entity.special.Custom;
 import com.edu.smu.track2career.manager.PersistenceManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +11,6 @@ import java.util.TreeMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
 import javax.faces.event.ActionEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

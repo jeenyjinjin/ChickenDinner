@@ -66,6 +66,10 @@ public class ExcelExtractorManager {
                     map.put("skillsfuture", map.get("skillsfuture") == null ? 1 : map.get("skillsfuture") + 1);
                 } else if (value.toLowerCase().contains("description")) {
                     map.put("description", map.get("description") == null ? 1 : map.get("description") + 1);
+                } else if (value.toLowerCase().contains("competency")) {
+                    map.put("competency", map.get("competency") == null ? 1 : map.get("competency") + 1);
+                } else if (value.toLowerCase().contains("keyword")) {
+                    map.put("keyword", map.get("keyword") == null ? 1 : map.get("keyword") + 1);
                 }
             }
 
@@ -150,13 +154,15 @@ public class ExcelExtractorManager {
                         break outerloop;
                     } else if (key.equals("courseCoordinator") && !value.isEmpty()) {
                         courseCoord = value;
-                    } else if (key.equals("skillsCompetency") && !value.isEmpty()) {
-                        skills.add(value);
+                    } else if (key.equals("skillsCompetency") || key.equals("competency") && !value.isEmpty()) {
+//                        skills.add(value);
                     } else if (key.equals("software") && !value.isEmpty()) {
                         softwares.add(value);
                     } else if (key.equals("description") && !value.isEmpty()) {
                         description = value.trim();
-                        break;
+//                        break;
+                    } else if (key.equals("keyword") && !value.isEmpty()) {
+                        skills.add(value);
                     }
                 }
             }

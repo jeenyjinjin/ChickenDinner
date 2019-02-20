@@ -61,7 +61,7 @@ d3.csv("", function(error, data) {
 
 
     node.append("text")
-        .attr("dy", ".3em")
+        .attr("dy", ".1em")
         .style("text-anchor", "middle")
         .text(function(d) { return d.text.substring(0, d.radius / 3); });
 

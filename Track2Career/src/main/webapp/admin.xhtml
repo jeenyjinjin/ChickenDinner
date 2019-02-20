@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+
+Note: please don't use netbean's default formatter in changing the format of the page, it is not that compatible in reformatting non-xhtml things
+and leads to compilation error 
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>Track2Career Admin Template</title>
+        <meta name="description" content="Ela Admin - HTML5 Admin Template"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png"/>
+        <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png"/>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
+        <h:outputStylesheet name="css/admin-page/cs-skin-elastic.css" />
+        <h:outputStylesheet name="css/admin-page/admin-view.css" />
+        <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
+        <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet"/>
+        <link href="https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jqvmap.min.css" rel="stylesheet"/>
+
+        <link href="https://cdn.jsdelivr.net/npm/weathericons@2.1.0/css/weather-icons.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet" />
+
+        <style>
+            #weatherWidget .currentDesc {
+                color: #ffffff!important;
+            }
+            .traffic-chart {
+                min-height: 335px;
+            }
+            #flotPie1  {
+                height: 150px;
+            }
+            #flotPie1 td {
+                padding:3px;
+            }
+            #flotPie1 table {
+                top: 20px!important;
+                right: -10px!important;
+            }
+            .chart-container {
+                display: table;
+                min-width: 270px ;
+                text-align: left;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            #flotLine5  {
+                height: 105px;
+            }
+
+            #flotBarChart {
+                height: 150px;
+            }
+            #originalPie{
+                min-height: 300px;
+            }
+
+        </style>
+        <h:outputScript>
+            //<![CDATA[
+            total_user=#{user.totalUserCount};
+            total_searches=#{user.totalSearches};
+            
+            
+            
+            
+            
+
+            //]]>
+            
+        </h:outputScript>
+    </h:head>
+
+    <h:body>
+        <!-- Left Panel -->
+        <aside id="left-panel" class="left-panel">
+            <nav class="navbar navbar-expand-sm navbar-default">
+                <div id="main-menu" class="main-menu collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="admin.jsf"><i class="menu-icon fa fa-dashboard"></i>Dashboard </a>
+                        </li>
+                        <li class="menu-title">administrative module</li><!-- /.menu-title -->
+                        <li>
+                            <a href="upload.jsf"> <i class="menu-icon fa fa-cloud-upload"></i>Upload Course Data </a>
+                        </li>
+
+                        <li class="menu-title">Server Information</li><!-- /.menu-title -->
+
+
+                        <li>
+                            <a href="#"> <i class="menu-icon ti-pulse"></i>Server Statistics </a>
+                        </li>
+
+                        <li class="menu-title">Advanced</li><!-- /.menu-title -->
+                        <li>
+                            <a href="#"> <i class="menu-icon  ti-server"></i>Database </a>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </nav>
+        </aside>
+        <!-- /#left-panel -->
+        <!-- Right Panel -->
+        <div id="right-panel" class="right-panel">
+            <!-- Header-->
+            <header id="header" class="header">
+                <div class="top-left">
+                    <div class="navbar-header">
+
+                        <a class="navbar-brand" href="./"><img src="#{resource['images/AdminPageLogo.png']}" alt="Logo"/></a>
+                        <a class="navbar-brand hidden" href="./"><img src="#{resource['images/AdminPageLogo.png']}" alt="Logo"/></a>
+                        <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                </div>
+                <div class="top-right">
+                    <div class="header-menu">
+
+
+                        <div class="user-area dropdown float-right">
+                            <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="user-avatar rounded-circle" src="#{resource['images/regandemo.jpg']}" alt="User Avatar"/>
+                            </a>
+
+                            <div class="user-menu dropdown-menu">
+
+
+                                <h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+            <!-- /#header -->
+            <!-- Content -->
+            <div class="content">
+                <!-- Animated -->
+                <div class="animated fadeIn">
+                    <!-- Widgets  -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="box-title">Overall statistics</h4>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="stat-widget-five">
+                                                        <div class="stat-icon dib flat-color-1">
+                                                            <i class="pe-7s-users"></i>
+                                                        </div>
+                                                        <div class="stat-content">
+                                                            <div class="text-left dib">
+                                                                <div class="stat-text"><span class="count">#{user.totalUserCount}</span></div>
+                                                                <div class="stat-heading">Total Users</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+<!--                                        <div class="col-lg-3 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="stat-widget-five">
+                                                        <div class="stat-icon dib flat-color-2">
+                                                            <i class="pe-7s-add-user"></i>
+                                                        </div>
+                                                        <div class="stat-content">
+                                                            <div class="text-left dib">
+                                                                <div class="stat-text"><span class="count">10</span></div>
+                                                                <div class="stat-heading">New Users</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>-->
+
+                                        <div class="col-lg-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="stat-widget-five">
+                                                        <div class="stat-icon dib flat-color-3">
+                                                            <i class="pe-7s-graph1"></i>
+                                                        </div>
+                                                        <div class="stat-content">
+                                                            <div class="text-left dib">
+                                                                <div class="stat-text"><span class="count">#{user.totalSearches}</span></div>
+                                                                <div class="stat-heading">Total Clicks</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="stat-widget-five">
+                                                        <div class="stat-icon dib flat-color-4">
+                                                            <i class="pe-7s-medal"></i>
+                                                        </div>
+                                                        <div class="stat-content">
+                                                            <div class="text-left dib">
+                                                                <div class="stat-text">#{user.mostPopularTrack}</div>
+                                                                <div class="stat-heading">Popular Track</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Widgets -->
+                    <!--  Traffic  -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="box-title">Traffic </h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card-body">
+                                            <!-- <canvas id="TrafficChart"></canvas>   -->
+                                            <h6 style="text-align: center">Track and Job Volume</h6>
+                                            <div id="traffic-legend"></div>
+                                            <div id="traffic-chart" class="traffic-chart"></div>
+                                            <a href="#" class="image fit"><img src="#{resource['images/TrackJob.PNG']}" alt="" /></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card-body">
+                                            <h6 style="text-align: center">Historical Track Traffic</h6>
+                                            <canvas id="tailoredBar" width="400" height="400"></canvas>
+                                        </div> <!-- /.card-body -->
+                                    </div>
+                                </div> <!-- /.row -->
+                                <div class="card-body"></div>
+                            </div>
+                        </div><!-- /# column -->
+                    </div>
+                    <!--  /Traffic -->
+                    <div class="clearfix"></div>
+                    <!-- Orders -->
+                    <div class="orders">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="box-title" style="text-align: center">Popular Jobs </h4>
+                                    </div>
+                                    <div class="card-body--">
+                                         <!-- /.table-stats -->
+                                        
+                                        <div class="table-stats order-table ov-h">
+                                                            <table class="table ">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Job</th>
+                                                                        <th>Searches</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <ui:repeat value="#{user.popularJobsRanking}" var="jobs" varStatus="myVarStatus">
+
+                                                                        <tr class= "pb-0">
+                                                                            <td>
+                                                                                #{jobs[0]}
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge badge-complete">#{jobs[1]}</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </ui:repeat>
+
+                                                                    
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                    </div>
+                                </div> <!-- /.card -->
+                            </div>  <!-- /.col-lg-8 -->
+
+                            <div class="col-xl-6">
+                                <div class="row">
+                                    
+                                        <div class="card br-0">
+                                            <div class="card-body">
+                                                <h6 style="text-align: center">User School Breakdown</h6>
+                                                <canvas id="originalPie"></canvas>
+                                            </div>
+                                        </div><!-- /.card -->
+                                    
+
+
+
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    <!--
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    -->
+                </div>
+                <!-- .animated -->
+            </div>
+            <!-- /.content -->
+            <div class="clearfix"></div>
+            <!-- Footer -->
+            <footer class="site-footer">
+                <div class="footer-inner bg-white">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            Copyright Chicken Dinner
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            SMU
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- /.site-footer -->
+        </div>
+        <!-- /#right-panel -->
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+
+        <h:outputScript name="js/Admin/admin-view.js"/>
+        <!--  Chart js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.bundle.min.js"></script>
+
+        <!--Chartist Chart-->
+        <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-legend@0.6.2/chartist-plugin-legend.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery.flot@0.8.3/jquery.flot.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flot-pie@1.0.0/src/jquery.flot.pie.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flot-spline@0.0.1/js/jquery.flot.spline.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/simpleweather@3.1.0/jquery.simpleWeather.min.js"></script>
+
+        <h:outputScript name="js/Admin/weather-init.js"/>
+
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
+
+        <h:outputScript name="js/Admin/fullcalendar-init.js"/>
+
+        <!--Local Stuff-->
+        <script>
+            
+            var school_json_object = #{user.schoolDistribution};
+            var school_name_Arr = Object.keys(school_json_object);
+            var school_count_Arr = Object.values(school_json_object);
+            
+            var track_search_break_up_object = #{user.trafficBreackDownByTrack};
+            var track_name_Arr = Object.keys(track_search_break_up_object);
+            var track_search_count_Arr = Object.values(track_search_break_up_object);
+            
+            var weekly_track_search = #{user.trackSearchTraffic};
+            var weekly_job_search=#{user.jobSearchTraffic};
+            
+            var day_to_display=Object.keys(weekly_track_search);
+            var weekly_track_count=Object.values(weekly_track_search);
+            var weekly_job_count=Object.values(weekly_job_search);
+            
+            jQuery(document).ready(function ($) {
+                "use strict";
+
+
+                // Line Chart  #flotLine5 End
+                // Traffic Chart using chartist
+
+                //
+//                       .::::.
+//                     .::::::::.
+//                    :::::::::::
+//                 ..:::::::::::'
+//              '::::::::::::'
+//                .::::::::::
+//           '::::::::::::::..
+//                ..::::::::::::.
+//              ``::::::::::::::::
+//               ::::``:::::::::'        .:::.
+//              ::::'   ':::::'       .::::::::.
+//            .::::'      ::::     .:::::::'::::.
+//           .:::'       :::::  .:::::::::' ':::::.
+//          .::'        :::::.:::::::::'      ':::::.
+//         .::'         ::::::::::::::'         ``::::.
+//     ...:::           ::::::::::::'              ``::.
+//    ```` ':.          ':::::::::'                  ::::..
+//                       '.:::::'                    ':'````..
+//beauty bless, no bug until we pass FYP! 
+//Maintainers, some parts are black magic, good luck with debugging!!!
+
+                var lastsixdays = [];
+
+                //the strange sign below represents a smaller sign, just xhtml cannot understand the original form
+                //warning, don't use netbeans default formatter to format this page, you will meet compilation errors due to symbols
+                for (var i = 0; i&lt; 6; i++) {
+                    var d = new Date();
+                    d.setDate(d.getDate() - i);
+                    //for the complete string, replace the 6 with 0
+                    lastsixdays.push(d.toJSON().slice(6, 10).replace(/-/g, '/'));
+                }
+                lastsixdays.reverse();
+                if ($('#traffic-chart').length) {
+                    var chart = new Chartist.Line('#traffic-chart', {
+                        labels: day_to_display,
+                        series: [
+                            {"name": 'Track', "data": weekly_track_count},
+                            {"name": 'Job', "data": weekly_job_count}
+                        ]
+                    }, {
+                        low: 0,
+                        showArea: true,
+                        showLine: false,
+                        showPoint: false,
+                        fullWidth: true,
+
+                        axisX: {
+                            showGrid: true
+                        }
+                    });
+
+                    chart.on('draw', function (data) {
+                        if (data.type === 'line' || data.type === 'area') {
+                            data.element.animate({
+                                d: {
+                                    begin: 2000 * data.index,
+                                    dur: 2000,
+                                    from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                                    to: data.path.clone().stringify(),
+                                    easing: Chartist.Svg.Easing.easeOutQuint
+                                }
+                            });
+                        }
+                    });
+                }
+                // Traffic Chart using chartist End
+                //Traffic chart chart-js
+//                if ($('#TrafficChart').length) {
+//                    var ctx = document.getElementById("TrafficChart");
+//                    ctx.height = 150;
+//                    var myChart = new Chart(ctx, {
+//                        type: 'line',
+//                        data: {
+//                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+//                            datasets: [
+//                                {
+//                                    label: "Visit",
+//                                    borderColor: "rgba(4, 73, 203,.09)",
+//                                    borderWidth: "1",
+//                                    backgroundColor: "rgba(4, 73, 203,.5)",
+//                                    data: [0, 2900, 5000, 3300, 6000, 3250, 0]
+//                                },
+//                                {
+//                                    label: "Bounce",
+//                                    borderColor: "rgba(245, 23, 66, 0.9)",
+//                                    borderWidth: "1",
+//                                    backgroundColor: "rgba(245, 23, 66,.5)",
+//                                    pointHighlightStroke: "rgba(245, 23, 66,.5)",
+//                                    data: [0, 4200, 4500, 1600, 4200, 1500, 4000]
+//                                },
+//                                {
+//                                    label: "Targeted",
+//                                    borderColor: "rgba(40, 169, 46, 0.9)",
+//                                    borderWidth: "1",
+//                                    backgroundColor: "rgba(40, 169, 46, .5)",
+//                                    pointHighlightStroke: "rgba(40, 169, 46,.5)",
+//                                    data: [1000, 5200, 3600, 2600, 4200, 5300, 0]
+//                                }
+//                            ]
+//                        },
+//                        options: {
+//                            responsive: true,
+//                            tooltips: {
+//                                mode: 'index',
+//                                intersect: false
+//                            },
+//                            hover: {
+//                                mode: 'nearest',
+//                                intersect: true
+//                            }
+//                            
+//
+//                        }
+//                    });
+//                }
+                //Traffic chart chart-js  End
+                // Bar Chart #flotBarChart
+//                $.plot("#flotBarChart", [{
+//                        data: [["app", 18], [2, 8], [4, 5], [6, 13], [8, 5], [10, 7], [12, 4], [14, 6], [16, 15], [18, 9], [20, 17], [22, 7], [24, 4], [26, 9], [28, 11]],
+//                        bars: {
+//                            show: true,
+//                            lineWidth: 0,
+//                            fillColor: '#ffffff8a'
+//                        }
+//                    }], {
+//                    grid: {
+//                        show: false
+//                    }
+//                });
+
+                if ($('#tailoredBar').length) {
+                    var ctx2 = document.getElementById("tailoredBar");
+                    var myChart = new Chart(ctx2, {
+                        type: 'bar',
+                        data: {
+                            labels: track_name_Arr,
+                            datasets: [{
+                                    label: 'Total Traffic History',
+                                    data: track_search_count_Arr,
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255,99,132,1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                        },
+                        options: {
+                            responsive: false,
+                            legend: {
+                                display: false
+                            },
+                            scales: {
+                                xAxes: [{
+                                        ticks: {
+                                            maxRotation: 90,
+                                            minRotation: 80
+                                        }
+                                    }],
+                                yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                            },
+                            title: {
+                                display: false,
+                                text: 'Historical Track Browse Traffic',
+                                position: 'top'
+                            }
+
+                        }
+                    });
+                }
+
+
+
+
+                if ($('#originalPie').length) {
+                    var ctx = document.getElementById("originalPie").getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: school_name_Arr,
+                            datasets: [{
+                                    backgroundColor: [
+                                        "#2ecc71",
+                                        "#3498db",
+                                        "#95a5a6",
+                                        "#9b59b6",
+                                        "#f1c40f"
+                                    ],
+                                    data: school_count_Arr
+                                }]
+                        }
+                    });
+                }
+
+
+                // Bar Chart #flotBarChart End
+            });
+        </script>
+    </h:body>
+</html>

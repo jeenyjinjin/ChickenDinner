@@ -9,6 +9,11 @@ import com.edu.smu.track2career.manager.*;
 import java.util.*;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import com.google.gson.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+
+
 @ManagedBean(name = "user", eager = true)
 @SessionScoped
 public class UserBean implements Serializable {
@@ -31,6 +36,19 @@ public class UserBean implements Serializable {
 
     public List<Course> courses;
     public LinkedHashSet<String> skills;
+    
+    //for admin page, it will run when the user login as type admin
+    public Integer totalUserCount;
+    public Integer newUserCount;
+    public Integer totalSearches;
+    public String mostPopularTrack;
+    public JsonObject trackSearchTraffic;
+    public JsonObject jobSearchTraffic;
+    public JsonObject trafficBreackDownByTrack;
+    public List<List<String>> popularJobsRanking;
+    public JsonObject schoolDistribution;
+    
+    
 
     public UserBean() {
         fullName = "Regan Seah";
@@ -181,6 +199,85 @@ public class UserBean implements Serializable {
         this.skills = skills;
     }
 
+    public Integer getTotalUserCount() {
+        return totalUserCount;
+    }
+
+    public void setTotalUserCount(Integer totalUserCount) {
+        this.totalUserCount = totalUserCount;
+    }
+
+    public Integer getNewUserCount() {
+        return newUserCount;
+    }
+
+    public void setNewUserCount(Integer newUserCount) {
+        this.newUserCount = newUserCount;
+    }
+
+    public Integer getTotalSearches() {
+        return totalSearches;
+    }
+
+    public void setTotalSearches(Integer totalSearches) {
+        this.totalSearches = totalSearches;
+    }
+
+    public String getMostPopularTrack() {
+        return mostPopularTrack;
+    }
+
+    public void setMostPopularTrack(String mostPopularTrack) {
+        this.mostPopularTrack = mostPopularTrack;
+    }
+
+    public JsonObject getTrackSearchTraffic() {
+        return trackSearchTraffic;
+    }
+
+    public void setTrackSearchTraffic(JsonObject trackSearchTraffic) {
+        this.trackSearchTraffic = trackSearchTraffic;
+    }
+
+    public JsonObject getJobSearchTraffic() {
+        return jobSearchTraffic;
+    }
+
+    public void setJobSearchTraffic(JsonObject jobSearchTraffic) {
+        this.jobSearchTraffic = jobSearchTraffic;
+    }
+
+    public JsonObject getTrafficBreackDownByTrack() {
+        return trafficBreackDownByTrack;
+    }
+
+    public void setTrafficBreackDownByTrack(JsonObject trafficBreackDownByTrack) {
+        this.trafficBreackDownByTrack = trafficBreackDownByTrack;
+    }
+
+    public List<List<String>> getPopularJobsRanking() {
+        return popularJobsRanking;
+    }
+
+    public void setPopularJobsRanking(List<List<String>> popularJobsRanking) {
+        this.popularJobsRanking = popularJobsRanking;
+    }
+
+    public JsonObject getSchoolDistribution() {
+        return schoolDistribution;
+    }
+
+    public void setSchoolDistribution(JsonObject schoolDistribution) {
+        this.schoolDistribution = schoolDistribution;
+    }
+
+    
+    
+    
+
+    
+    
+
     public void checkLoggedIn() {
         try {
             if (user == null) {
@@ -276,8 +373,163 @@ public class UserBean implements Serializable {
             query.setParameter(2, password);
 
             user = query.getSingleResult();
-            if (user != null) {
+            if (user != null&&user.getUserType().equals("Student")) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+            }else if(user != null&&user.getUserType().equals("Admin")){
+                
+                //start of retrieving a overall user stats, when the table gets larger, it will take more time
+                //by that time we graduate already:)
+                //so there is no need for a special cron job to save cpu power
+                try{
+                    TypedQuery<Long> getTotalUserQuery = em.createQuery("select count(u) from User u",Long.class);
+                    totalUserCount = ((Long)getTotalUserQuery.getSingleResult()).intValue();
+                }catch(Exception e){
+                    e.printStackTrace();
+                    System.out.println("data retrieval error");
+                }
+                try{
+                    TypedQuery<Long> getTotalSearches = em.createQuery("select count(a) from AccessSummary a",Long.class);
+                    totalSearches = ((Long)getTotalSearches.getSingleResult()).intValue();
+                }catch(Exception e){
+                    e.printStackTrace();
+                    System.out.println("data retrieval error");
+                }
+                try{
+                    TypedQuery<Object[]> getAllTrackSearchCount = em.createQuery("SELECT a.trackName, count(a) FROM AccessSummary AS a where a.accessType=?1 group by a.trackName",Object[].class);
+                    getAllTrackSearchCount.setParameter(1, "T");
+                    List<Object[]> allTrackSearchCount = getAllTrackSearchCount.getResultList();
+                    String mostPopularTrackName ="";
+                    int largestCount =0;
+                    JsonObject tempTrackHistoryBreakDown = new JsonObject();
+                    for(int a = 0; a<allTrackSearchCount.size();a++){
+                        Object[] currentTrackInfo = allTrackSearchCount.get(a);
+                        if(currentTrackInfo instanceof Object[]){
+                            Object[] row = (Object[]) currentTrackInfo;
+                            System.out.println("testing"+row[0]+row[1]);
+                            String currentTrackName = String.valueOf(row[0]);
+                            
+                            
+                            int currentTrackSearches = ((Long)row[1]).intValue();
+                            tempTrackHistoryBreakDown.addProperty(currentTrackName, currentTrackSearches);
+                            if(currentTrackSearches>largestCount){
+                                largestCount = currentTrackSearches;
+                                mostPopularTrackName = currentTrackName;
+                            }
+                        }
+                        
+                    }
+                    mostPopularTrack = mostPopularTrackName;
+                    trafficBreackDownByTrack = tempTrackHistoryBreakDown;
+                    System.out.println("testing display: most popular track is "+ mostPopularTrack);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    System.out.println("data retrieval error");
+                }
+                
+                try{
+                    TypedQuery<Object[]> getUserSchoolInfo = em.createQuery("SELECT u.school, count(u) from User u group by u.school",Object[].class);
+                    List<Object[]> schoolBreakDown = getUserSchoolInfo.getResultList();
+                    JsonObject tempSchoolDistribution = new JsonObject();
+                    
+                    for(Object[] a: schoolBreakDown){
+                        String schoolName = String.valueOf(a[0]);
+                        int count = ((Long)a[1]).intValue();
+                        System.out.println("testSchool: "+ schoolName+count);
+                        tempSchoolDistribution.addProperty(schoolName, count);
+                    }
+                    
+                    schoolDistribution = tempSchoolDistribution;
+                }catch(Exception e){
+                    System.out.println("data retrieval error");
+                    e.printStackTrace();
+                }
+                
+                try{
+                    TypedQuery<Object[]> getTopJobs = em.createQuery("SELECT a.jobName, count(a) from AccessSummary a where a.accessType=?1 group by a.jobName having count(a)>1 order by count(a) desc",Object[].class);
+                    getTopJobs.setParameter(1, "J");
+                    List<Object[]> topJobs = getTopJobs.getResultList();
+                    List<List<String>> tempPopularJobs= new ArrayList<>();
+                    //get top 5 jobs of from the list
+                    for(int a =0; a<topJobs.size();a++){
+                        if(a>=5){
+                            break;
+                        }else{
+                            Object[] currentPair = topJobs.get(a);
+                            String jobName= String.valueOf(currentPair[0]);
+                            String count = String.valueOf(currentPair[1]);
+                            System.out.println("testing topjobs : "+ jobName + count);
+                            List<String> tempJobArr = new ArrayList<String>();
+                            tempJobArr.add(jobName);
+                            tempJobArr.add(count);
+                            tempPopularJobs.add(tempJobArr);
+                            
+                        }
+                        
+                    }
+                    
+                    popularJobsRanking=tempPopularJobs;
+                    
+                    
+                    
+                    
+                    
+                }catch(Exception e){
+                    System.out.println("topJob query got issue");
+                    e.printStackTrace();
+                }
+                
+                try{
+                    //use native sql string as jpql has poor support for converting dates
+                    Query getWeeklyJobs = em.createNativeQuery("select date(access_time),count(*) from access_summary where access_type=?1 AND access_time> (curdate()-6) group by date(access_time)");
+                    getWeeklyJobs.setParameter(1, "J");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Calendar cal = Calendar.getInstance();
+                    // get starting date
+                    cal.add(Calendar.DAY_OF_YEAR, -6);
+                    JsonObject tempJobDates = new JsonObject();
+                    JsonObject tempTrackDates=new JsonObject();
+                    // loop adding one day in each iteration
+                    for(int i = 0; i< 6; i++){
+                        cal.add(Calendar.DAY_OF_YEAR, 1);
+                        System.out.println(sdf.format(cal.getTime()));
+                        tempJobDates.addProperty(sdf.format(cal.getTime()), 0);
+                        tempTrackDates.addProperty(sdf.format(cal.getTime()), 0);
+                    }
+                    List<Object[]> weeklyJobs = getWeeklyJobs.getResultList();
+                    for(Object[] a: weeklyJobs){
+                        //System.out.println("testing weeklyJobs: "+a[0]+a[1]);
+                        tempJobDates.addProperty(String.valueOf(a[0]),((Long)a[1]).intValue());
+                        
+                    }
+                    
+                    jobSearchTraffic = tempJobDates;
+                    
+//                    TypedQuery<Object[]> getWeeklyTracks = em.createQuery("SELECT DATE(a.accessTime), count(a.accessTime) from AccessSummary a where a.accessType=?1 and a.accessTime>=(CURRENT_DATE-6) group by a.jobName",Object[].class);
+                    Query getWeeklyTracks = em.createNativeQuery("select date(access_time),count(*) from access_summary where access_type=?1 AND access_time> (curdate()-6) group by date(access_time)");
+                    getWeeklyTracks.setParameter(1, "T");
+                    List<Object[]> weeklyTracks = getWeeklyTracks.getResultList();
+                    for(Object[] a: weeklyTracks){
+                        System.out.println("testing weeklyTracks: "+a[0]+a[1]);
+                        tempTrackDates.addProperty(String.valueOf(a[0]),((Long)a[1]).intValue());
+                        
+                    }
+                    System.out.println(tempJobDates);
+                    System.out.println(tempTrackDates);
+                    
+                    trackSearchTraffic = tempTrackDates;
+                    
+                    
+                }catch(Exception e){
+                    System.out.println("error in weekly jobs");
+                    e.printStackTrace();
+                }
+                
+                
+                
+                
+                
+                
+                FacesContext.getCurrentInstance().getExternalContext().redirect("admin.jsf");
             }
 
         } catch (Exception e) {

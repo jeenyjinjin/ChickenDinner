@@ -1,42 +1,73 @@
 package com.edu.smu.track2career.beans;
 
+import com.edu.smu.track2career.entity.special.Custom;
 import com.edu.smu.track2career.entity.*;
+import com.edu.smu.track2career.entity.special.JobData;
+import com.edu.smu.track2career.entity.special.SkillData;
 import javax.faces.bean.ManagedBean;
 import javax.persistence.*;
 import com.edu.smu.track2career.manager.*;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.json.JsonArrayBuilder;
-import javax.json.Json;
+import java.util.stream.Collectors;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import org.apache.commons.text.similarity.JaccardSimilarity;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+
 
 @ManagedBean(name = "search", eager = true)
 @SessionScoped
 public class SearchBean {
 
-    public String job;
+    private String job;
+    private String industry;
+    private int min;
+    private int max;
+    private int mean;
+    private List<String> careerPath;
+
+    private List<String> skillArr;
+
     private ArrayList<String> jobArr;
     private JsonArray fullData;
+    private ArrayList<String> searchIndustryList;
     private ArrayList<String> industryList;
+    private ArrayList<String> trackSkillList;
     private LinkedHashMap<String, TreeSet<String>> jobData;
+    private List<JobData> skillDataList;
 
-    public String messageJ;
-    public String messageT;
+    private String messageJ;
+    private String messageT;
 
-    public String track;
-    public List<Track> initialTracks;
+    private String track;
+    private List<Track> initialTracks;
+    
+    
 
     // search results storage
-    public List<Course> courseList;
-    public ArrayList<ArrayList<String>> achievedList;
-    public ArrayList<ArrayList<Custom>> unachievedList;
-    public javax.json.JsonObject courseInTree;
-    public javax.json.JsonObject skillInBubble;
+    private List<Course> courseList;
+    private ArrayList<ArrayList<Custom>> achievedList;
+    private ArrayList<ArrayList<Custom>> unachievedList;
+    private ArrayList<Custom> topFifteenSkills;
+    private JsonObject courseInTree;
+
+    private JsonArray skillInBubble;
 
     public SearchBean() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        String s = context.getRealPath("./data/");
+
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
         try {
@@ -94,12 +125,84 @@ public class SearchBean {
         this.job = job;
     }
 
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getMean() {
+        return mean;
+    }
+
+    public void setMean(int mean) {
+        this.mean = mean;
+    }
+
+    public List<String> getCareerPath() {
+        return careerPath;
+    }
+
+    public void setCareerPath(List<String> careerPath) {
+        this.careerPath = careerPath;
+    }
+
+    public List<String> getSkillArr() {
+        return skillArr;
+    }
+
+    public void setSkillArr(List<String> skillArr) {
+        this.skillArr = skillArr;
+    }
+
+    public ArrayList<String> getSearchIndustryList() {
+        return searchIndustryList;
+    }
+
+    public void setSearchIndustryList(ArrayList<String> searchIndustryList) {
+        this.searchIndustryList = searchIndustryList;
+    }
+
     public LinkedHashMap<String, TreeSet<String>> getJobData() {
         return jobData;
     }
 
     public void setJobData(LinkedHashMap<String, TreeSet<String>> jobData) {
         this.jobData = jobData;
+    }
+
+    public List<JobData> getSkillDataList() {
+        return skillDataList;
+    }
+
+    public void setSkillDataList(List<JobData> skillDataList) {
+        this.skillDataList = skillDataList;
+    }
+
+    public ArrayList<String> getTrackSkillList() {
+        return trackSkillList;
+    }
+
+    public void setTrackSkillList(ArrayList<String> trackSkillList) {
+        this.trackSkillList = trackSkillList;
     }
 
     public String getMessageJ() {
@@ -142,11 +245,11 @@ public class SearchBean {
         this.courseList = courseList;
     }
 
-    public ArrayList<ArrayList<String>> getAchievedList() {
+    public ArrayList<ArrayList<Custom>> getAchievedList() {
         return achievedList;
     }
 
-    public void setAchievedList(ArrayList<ArrayList<String>> achievedList) {
+    public void setAchievedList(ArrayList<ArrayList<Custom>> achievedList) {
         this.achievedList = achievedList;
     }
 
@@ -157,22 +260,28 @@ public class SearchBean {
     public void setUnachievedList(ArrayList<ArrayList<Custom>> unachievedList) {
         this.unachievedList = unachievedList;
     }
-    
-    public void setCourseInTree(javax.json.JsonObject courseInTree){
-        this.courseInTree=courseInTree;
+
+    public ArrayList<Custom> getTopFifteenSkills() {
+        return topFifteenSkills;
     }
-    
-    public javax.json.JsonObject getCourseInTree(){
+
+    public void setTopFifteenSkills(ArrayList<Custom> topFifteenSkills) {
+        this.topFifteenSkills = topFifteenSkills;
+    }
+
+    public JsonObject getCourseInTree() {
         return courseInTree;
     }
-    
-    
-    public void setSkillInBubble(javax.json.JsonObject skillInBubble){
-        this.skillInBubble=skillInBubble;
-        
+
+    public void setCourseInTree(JsonObject courseInTree) {
+        this.courseInTree = courseInTree;
     }
-    
-    public javax.json.JsonObject getSkillInBubble(){
+
+    public void setSkillInBubble(JsonArray skillInBubble) {
+        this.skillInBubble = skillInBubble;
+    }
+
+    public JsonArray getSkillInBubble() {
         return skillInBubble;
     }
 
@@ -205,42 +314,194 @@ public class SearchBean {
         return list;
     }
 
-    public void submitJob() {
-        try {
-            List<String> relatedJobs = completeText(job);
-            jobData = new LinkedHashMap<>();
+    public void onJobTitleSelected() {
+        TreeSet<String> industries = new TreeSet<>();
+        for (int i = 0; i < fullData.size(); i++) {
+            JsonObject obj = fullData.get(i).getAsJsonObject();
+            String jobTitle = obj.get("job_title").getAsString();
+            String industryName = obj.get("industry_name").getAsString();
+            industryName = industryName.replace(" is in the list", "");
+            industryName = industryName.trim();
 
-            for (String jobName : relatedJobs) {
-                TreeSet<String> industries = new TreeSet<>();
-                for (int i = 0; i < fullData.size(); i++) {
-                    JsonObject obj = fullData.get(i).getAsJsonObject();
-                    String jobTitle = obj.get("job_title").getAsString();
-                    String industryName = obj.get("industry_name").getAsString();
-                    industryName = industryName.replace(" is in the list", "");
-                    industryName = industryName.trim();
-
-                    if (jobTitle.equalsIgnoreCase(jobName)) {
-                        int industryId = industryList.indexOf(industryName);
-                        industries.add(industryName);
-
-//                        String url = "https://jobsense.sg/api/get/job-skill-gind-for-g-job/";
-//                        String urlParameters = "{ \"jobtitle\" : \"" + jobTitle.toLowerCase() + "\", \"industry_id\" : " + industryId + ", \"no_of_results\" : 10 }";
-//                        urlParameters = urlParameters.replaceAll(" ", "%20");
-//                        JsonObject skillsResults = RestfulManager.sendPost(url, urlParameters);
-//                        System.out.println(skillsResults.toString());
-                    }
-                }
-                jobData.put(jobName, industries);
+            if (jobTitle.equalsIgnoreCase(job)) {
+                int industryId = industryList.indexOf(industryName);
+                industries.add(industryName);
             }
-            FacesContext.getCurrentInstance().getExternalContext().redirect("JobList.jsf");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        }
+
+        if (!industries.isEmpty()) {
+            searchIndustryList = new ArrayList<>(industries);
+        } else {
+            searchIndustryList = new ArrayList<>();
         }
     }
 
-    public void submitTrack() {
+    public void onIndustrySelected() throws IOException {
+        int industryId = industryList.indexOf(industry);
+        //current issue: most times the insertion is okay, however, when the industry is onselected and there is wage, the data will be inserted twoce
+        //good to solve this issue, it's okay to leaved it, cuz it's a very rare case
+        //added entitymanager to insert user job search records to database
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
+        UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+        //insert job search data into database
+        
+        try{
+            insertJobSearchToAccessSummary(em, ub.getUser().getSchool(),job);
+            em.getTransaction().commit();
+        }catch(Exception e){
+            System.out.println("database insertion error");
+            e.printStackTrace();
+        }
+        try {
+            // Retrieve the skills for the specified job
+            String url = "https://jobsense.sg/api/get/job-skill-gind-for-g-job/";
+            String urlParameters = "{ \"jobtitle\" : \"" + job.toLowerCase() + "\", \"industry_id\" : " + industryId + ", \"no_of_results\" : 10 }";
+
+            JsonObject skillsResults = RestfulManager.sendPost(url, urlParameters);
+            JsonArray arr = skillsResults.get("data").getAsJsonArray();
+            Type listType = new TypeToken<List<String>>() {
+            }.getType();
+
+            List<String> yourList = new Gson().fromJson(arr, listType);
+            skillArr = yourList;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        try {
+            // Retrieve salary information for the specific job
+            String url = "https://research.larc.smu.edu.sg/wagedb/api/get-salary-info/";
+            String urlParameters = "jobtitle=" + job + "&industry=" + industry;
+//            
+            JsonObject results = RestfulManager.sendPostWageDb(url, urlParameters);
+            if (!results.get("status").getAsBoolean()) {
+                min = 0;
+                mean = 0;
+                max = 0;
+            }
+            else {
+                JsonObject salaryInfo = results.get("salary-info").getAsJsonObject().get("salary-info").getAsJsonObject();
+
+                min = salaryInfo.get("min-salary").getAsInt();
+                mean = salaryInfo.get("mean-salary").getAsInt();
+                max = salaryInfo.get("max-salary").getAsInt();
+            }
+//            System.out.println(results);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        try {
+            careerPath = new ArrayList<>();
+            
+            // Retrieve the skills for the specified job
+            String url = "https://jobsense.sg/api/get/js-2-pop-career-path/";
+            String urlParameters = "{ \"jobtitle\" : \"" + job.toLowerCase() + "\", \"industry_id\" : " + industryId + "}";
+            
+            JsonObject careerPathResults = RestfulManager.sendPost(url, urlParameters);
+            if (careerPathResults.get("status").getAsBoolean()) {
+                JsonArray careerPathList1 = careerPathResults.get("data").getAsJsonArray();
+                JsonArray careerPathList2 = careerPathList1.get(0).getAsJsonArray();
+                for (JsonElement elem : careerPathList2) {
+                    JsonObject career = elem.getAsJsonObject();
+                    String jobtitle = career.get("jobtitle").getAsString();
+                    careerPath.add(StringManager.convertToTitleCaseIteratingChars(jobtitle));
+                }
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        FacesContext.getCurrentInstance().getExternalContext().redirect("JobDetails.jsf");
+    }
+
+    public void submitJob() throws IOException {
+        int industryId = industryList.indexOf(industry);
+        //added entitymanager to insert user job search records to database
+//        EntityManager em = PersistenceManager.getEntityManager();
+//        em.getTransaction().begin();
+//        UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+//        
+//        try{
+//            insertJobSearchToAccessSummary(em, ub.getUser().getSchool(),job);
+//            em.getTransaction().commit();
+//        }catch(Exception e){
+//            System.out.println("database insertion error");
+//            e.printStackTrace();
+//        }
+        try {
+            // Retrieve the skills for the specified job
+            String url = "https://jobsense.sg/api/get/job-skill-gind-for-g-job/";
+            String urlParameters = "{ \"jobtitle\" : \"" + job.toLowerCase() + "\", \"industry_id\" : " + industryId + ", \"no_of_results\" : 10 }";
+
+            JsonObject skillsResults = RestfulManager.sendPost(url, urlParameters);
+            JsonArray arr = skillsResults.get("data").getAsJsonArray();
+            Type listType = new TypeToken<List<String>>() {
+            }.getType();
+
+            List<String> yourList = new Gson().fromJson(arr, listType);
+            skillArr = yourList;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        try {
+            // Retrieve salary information for the specific job
+            String url = "https://research.larc.smu.edu.sg/wagedb/api/get-salary-info/";
+            String urlParameters = "jobtitle=" + job + "&industry=" + industry;
+
+            JsonObject results = RestfulManager.sendPostWageDb(url, urlParameters);
+            if (!results.get("status").getAsBoolean()) {
+                min = 0;
+                mean = 0;
+                max = 0;
+            }
+            else {
+                JsonObject salaryInfo = results.get("salary-info").getAsJsonObject().get("salary-info").getAsJsonObject();
+
+                min = salaryInfo.get("min-salary").getAsInt();
+                mean = salaryInfo.get("mean-salary").getAsInt();
+                max = salaryInfo.get("max-salary").getAsInt();
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        try {
+            careerPath = new ArrayList<>();
+            
+            // Retrieve the skills for the specified job
+            String url = "https://jobsense.sg/api/get/js-2-pop-career-path/";
+            String urlParameters = "{ \"jobtitle\" : \"" + job.toLowerCase() + "\", \"industry_id\" : " + industryId + "}";
+            
+            JsonObject careerPathResults = RestfulManager.sendPost(url, urlParameters);
+            if (careerPathResults.get("status").getAsBoolean()) {
+                JsonArray careerPathList1 = careerPathResults.get("data").getAsJsonArray();
+                JsonArray careerPathList2=careerPathList1.get(0).getAsJsonArray();
+                for (JsonElement elem : careerPathList2) {
+                    JsonObject career = elem.getAsJsonObject();
+                    String jobtitle = career.get("jobtitle").getAsString();
+                    
+                    careerPath.add(StringManager.convertToTitleCaseIteratingChars(jobtitle));
+                }
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        FacesContext.getCurrentInstance().getExternalContext().redirect("JobDetails.jsf");
+    }
+
+    public void submitTrack() throws IOException {
+        EntityManager em = PersistenceManager.getEntityManager();
+        em.getTransaction().begin();
+        
         try {
 
             // Retrieve all courses in the specified track
@@ -255,11 +516,94 @@ public class SearchBean {
 
             List<String> skillList = skillQuery.getResultList();
 
+            Map<String, Float> skillMap = new HashMap<>();
+            Iterator<String> iterator = skillList.iterator();
+
+            JaccardSimilarity similarity = new JaccardSimilarity();
+            trackSkillList = new ArrayList<>();
+
+            // scan through the skillList and populate the skills with a score into the map
+            while (iterator.hasNext()) {
+                String skillName = iterator.next();
+                
+                TopDocs results = LuceneManager.searchQuery(skillName);
+                Float score = results.getMaxScore();
+
+                String selectedSkill = "";
+                ArrayList<String> skillScoreCheckList = new ArrayList<>();
+
+                for (ScoreDoc doc : results.scoreDocs) {
+                    int docId = doc.doc;
+
+                    IndexReader reader = DirectoryReader.open(LuceneManager.index);
+                    IndexSearcher searcher = new IndexSearcher(reader);
+
+                    Document thisDoc = searcher.doc(docId);
+                    String docSkillName = thisDoc.get("skill");
+
+                    if (docSkillName.equalsIgnoreCase(skillName)) {
+                        selectedSkill = docSkillName;
+                        break;
+                    } else {
+                        skillScoreCheckList.add(docSkillName);
+                    }
+                }
+
+                if (selectedSkill.isEmpty()) {
+                    Double topScore = Double.MIN_VALUE;
+                    for (String skill : skillScoreCheckList) {
+                        Double individualScore = similarity.apply(skill, skillName);
+                        if (individualScore > topScore) {
+                            topScore = individualScore;
+                            selectedSkill = skill;
+                        }
+                    }
+                }
+
+                trackSkillList.add(selectedSkill);
+
+                if (score == null || score.isNaN()) {
+                    skillMap.put(skillName, -1.0f);
+                } else {
+                    skillMap.put(skillName, score);
+                }
+            }
+
+            // Sort the map in descending order based on the score value
+            Map<String, Float> sortedSkillMap = skillMap
+                    .entrySet()
+                    .stream()
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                    .collect(
+                            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                    LinkedHashMap::new));
+
+            // Scan through the sortedSkillMap and convert it into a arraylist of custom
+            ArrayList<Custom> mySkillList = new ArrayList<>();
+            Iterator<String> skillIterator = sortedSkillMap.keySet().iterator();
+            int index = 0;
+//            topFifteenSkills = new ArrayList<>();
+
+            while (skillIterator.hasNext()) {
+                String skillName = skillIterator.next();
+                Float score = sortedSkillMap.get(skillName);
+                if (index++ <= 14) {
+                    Custom custom = new Custom(true, skillName);
+//                    topFifteenSkills.add(custom);
+                    mySkillList.add(custom);
+                } else {
+                    Custom custom = new Custom(false, skillName);
+                    mySkillList.add(custom);
+                }
+            }
+
             // Count number of times each skills appeared
             TreeMap<String, Integer> map = new TreeMap<>();
             Iterator<String> skillIter = skillList.iterator();
+
             while (skillIter.hasNext()) {
                 String skillName = skillIter.next();
+
                 Integer num = 1;
                 if (map.containsKey(skillName)) {
                     num = map.get(skillName) + 1;
@@ -286,140 +630,193 @@ public class SearchBean {
                 }
             }
 
-            // Arrange the skills in each arraylist of 4 for achieved skills
+            // Arrange the skills in each arraylist of 4 for achieved & unachieved skills
             achievedList = new ArrayList<>();
-            int count = 0;
-            ArrayList<String> temp = null;
-            for (int i = 0; i < ownedSkills.size(); i++) {
-                if (count == 4) {
-                    achievedList.add(temp);
-                    count = 0;
-                }
-                if (count == 0) {
-                    temp = new ArrayList<>();
-                }
-                temp.add(ownedSkills.get(i));
-                count++;
-            }
-
-            if (temp != null && !temp.isEmpty()) {
-                achievedList.add(temp);
-            }
-
-            // Arrange the rest of the elements in the map in accordance of count of appearance
-            TreeMap<Integer, ArrayList<String>> tempHolder = new TreeMap<>();
-            Iterator<String> mapIter = map.keySet().iterator();
-            while (mapIter.hasNext()) {
-                String skillName = mapIter.next();
-                Integer num = map.get(skillName);
-                if (tempHolder.containsKey(num)) {
-                    tempHolder.get(num).add(skillName);
-                } else {
-                    ArrayList<String> tempList = new ArrayList<>();
-                    tempList.add(skillName);
-                    tempHolder.put(num, tempList);
-                }
-            }
-
-            ArrayList<Custom> otherSkills = new ArrayList<>();
-            Iterator<Integer> sortingIter = tempHolder.descendingKeySet().iterator();
-            while (sortingIter.hasNext()) {
-                Integer num = sortingIter.next();
-                ArrayList<String> skills = tempHolder.get(num);
-                Collections.sort(skills);
-                if (num > 1) {
-                    for (String skillName : skills) {
-                        otherSkills.add(new Custom(true, skillName));
-                    }
-                } else {
-                    for (String skillName : skills) {
-                        otherSkills.add(new Custom(false, skillName));
-                    }
-                }
-            }
-
             unachievedList = new ArrayList<>();
-            int totalCount = 0;
-            count = 0;
-            ArrayList<Custom> temp1 = null;
-            for (int i = 0; i < otherSkills.size(); i++) {
-                if (count == 4) {
-                    unachievedList.add(temp1);
-                    count = 0;
+            int achievedCount = 0, unachievedCount = 0;
+            ArrayList<Custom> achievedTemp = null, unachievedTemp = null;
+
+            for (Custom custom : mySkillList) {
+                String name = custom.getName();
+                // This current skill is an achieved skill
+                if (userSkills.contains(name)) {
+                    if (achievedCount == 4) {
+                        achievedList.add(achievedTemp);
+                        achievedCount = 0;
+                    }
+                    if (achievedCount == 0) {
+                        achievedTemp = new ArrayList<>();
+                    }
+                    achievedTemp.add(custom);
+                    achievedCount++;
+                } // This current skill is NOT an achieved skill
+                else {
+                    if (unachievedCount == 4) {
+                        unachievedList.add(unachievedTemp);
+                        unachievedCount = 0;
+                    }
+                    if (unachievedCount == 0) {
+                        unachievedTemp = new ArrayList<>();
+                    }
+                    unachievedTemp.add(custom);
+                    unachievedCount++;
                 }
-                if (count == 0) {
-                    temp1 = new ArrayList<>();
-                }
-                temp1.add(otherSkills.get(i));
-                count++;
-                totalCount++;
             }
-            if (temp1 != null && !temp1.isEmpty()) {
-                unachievedList.add(temp1);
+
+            if (achievedTemp != null && !achievedTemp.isEmpty()) {
+                achievedList.add(achievedTemp);
             }
-            
+
+            if (unachievedTemp != null && !unachievedTemp.isEmpty()) {
+                unachievedList.add(unachievedTemp);
+            }
+
             //Return visualisable json data
             //Naming conflicts in jsonx.json library and gson.json library
             //the main logic is To retrieve relative course and skill information based on the track submitted
             //When the data is returned to TrackDetails.xhtml, a var object is used to get and store the json data on the frontend
             //The json data is then visualized using the imported dndTree.js in the <div = "tree-container">, visualization library is d3.js
-            
             ArrayList<ArrayList<String>> courseInfo = new ArrayList<>();
-            //Extract course name from the list of courses...still using java7, cannot method reference:(
-            ArrayList<String> courseNameList = new ArrayList<String>();
-            for (Course currentCourse : courseList) {
-                ArrayList<String> toAdd = new ArrayList<String>();
 
-                toAdd.add(currentCourse.getCourseId());
-                toAdd.add(currentCourse.getCourseName());
+            //Extract course name from the list of courses...still using java7, cannot method reference:(
+            ArrayList<String> courseNameList = new ArrayList<>();
+            for (Course course : courseList) {
+                ArrayList<String> toAdd = new ArrayList<>();
+
+                String courseId = course.getCourseId();
+                String courseName = course.getCourseName();
+
+                toAdd.add(courseId);
+                toAdd.add(courseName);
+
+                TypedQuery<String> relatedSkillQuery = em.createQuery("SELECT s.skillName FROM Skill s WHERE s.skillPK.courseId = ?1", String.class);
+                relatedSkillQuery.setParameter(1, courseId);
+
+                List<String> courseRelatedSkills = relatedSkillQuery.getResultList();
+                for (String skillName : courseRelatedSkills) {
+                    toAdd.add(skillName);
+                }
+
                 courseInfo.add(toAdd);
             }
 
-            //Put courses and its associated skills into an array of array courseName[0], courseID[1],skill[2...end]
-            for (ArrayList<String> courseOverview : courseInfo) {
-                String currentCourseID = courseOverview.get(0);
-                TypedQuery<String> relatedSkillQuery = em.createQuery("SELECT s.skillName FROM Skill s WHERE s.skillPK.courseId = ?1", String.class);
-                relatedSkillQuery.setParameter(1, currentCourseID);
-                List<String> courseRelatedSkills = relatedSkillQuery.getResultList();
-                for (String currentSkillName : courseRelatedSkills) {
-                    courseOverview.add(currentSkillName);
-                }
-            }
-            //The JsonArrayBuilder class is in conflict with the imported gson library(here uses javax.json)
-            
-            javax.json.JsonArrayBuilder toInclude = javax.json.Json.createArrayBuilder();
+            JsonArray toInclude = new JsonArray();
             for (ArrayList<String> detailedCourse : courseInfo) {
                 String courseCode = detailedCourse.get(0);
                 String courseName = detailedCourse.get(1);
 
-                javax.json.JsonArrayBuilder skillSet = javax.json.Json.createArrayBuilder();
+                JsonArray skillSet = new JsonArray();
                 for (int counter = 2; counter < detailedCourse.size(); counter++) {
                     //setting the size of a circle to cope for the frontend needs(e.g: bubble size)
                     int min = 1000;
                     int max = 2000;
                     int randomSize = ThreadLocalRandom.current().nextInt(min, max + 1);
-                    javax.json.JsonObject skilltemp = javax.json.Json.createObjectBuilder().add("name", detailedCourse.get(counter)).add("size", randomSize).build();
+                    JsonObject skillTemp = new JsonObject();
+                    skillTemp.addProperty("name", detailedCourse.get(counter));
+                    skillTemp.addProperty("size", randomSize);
 
-                    skillSet.add(skilltemp);
-
+                    skillSet.add(skillTemp);
                 }
-                
-                javax.json.JsonObject middleLevelCourse = Json.createObjectBuilder().add("name", courseName).add("children", skillSet).build();
-                
+
+                JsonObject middleLevelCourse = new JsonObject();
+                middleLevelCourse.addProperty("name", courseName);
+                middleLevelCourse.add("children", skillSet);
+
                 toInclude.add(middleLevelCourse);
-
             }
-            javax.json.JsonArray toAdd = toInclude.build();
-            //construct the highest level returned object in JSON object
-            javax.json.JsonObject toReturnInfo = Json.createObjectBuilder().add("name", track).add("children", toAdd).build();
-            setCourseInTree(toReturnInfo);
-            
-            //new Method in bubble visualisation on skills distribution
 
+            JsonObject toReturnInfo = new JsonObject();
+            toReturnInfo.addProperty("name", track);
+            toReturnInfo.add("children", toInclude);
+
+            courseInTree = toReturnInfo;
+
+            JsonArray finalBubble = new JsonArray();
+            ArrayList<String> flattenedAchievedSkill = new ArrayList<>();
+            int bubbleMin = 30;
+            int bubbleMax = 50;
+            if (ownedSkills.size() > 0) {
+                //old fashioned way to flatten a 2d array
+                for (String curSkill : ownedSkills) {
+                    int randomBubbleSize = ThreadLocalRandom.current().nextInt(bubbleMin, bubbleMax + 1);
+                    JsonObject achievedSkillUnitToAdd = new JsonObject();
+                    achievedSkillUnitToAdd.addProperty("text", curSkill);
+                    achievedSkillUnitToAdd.addProperty("size", randomBubbleSize);
+                    achievedSkillUnitToAdd.addProperty("group", 1);
+                    finalBubble.add(achievedSkillUnitToAdd);
+                }
+            }
+            //retrive unachievedskills from the remained map
+            if (!map.isEmpty()) {
+                Set<String> notPossessedSkills = map.keySet();
+                for (String curSkill : notPossessedSkills) {
+                    int randomBubbleSize = ThreadLocalRandom.current().nextInt(bubbleMin, bubbleMax + 1);
+                    JsonObject unAchievedSkillUnitToAdd = new JsonObject();
+                    unAchievedSkillUnitToAdd.addProperty("text", curSkill);
+                    unAchievedSkillUnitToAdd.addProperty("size", randomBubbleSize);
+                    unAchievedSkillUnitToAdd.addProperty("group", 2);
+                    finalBubble.add(unAchievedSkillUnitToAdd);
+                }
+            }
+
+            skillInBubble = finalBubble;
+            
+            //insert tracksearch data into database
+            insertTrackSearchToAccessSummary(em, ub.getUser().getSchool(),track);
+            em.getTransaction().commit();
             FacesContext.getCurrentInstance().getExternalContext().redirect("TrackDetails.jsf");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getRelatedJobs() {
+        List<SkillData> fullSkillData = DataService.retrieveSkillJobData();
+        Map<String, Integer> checkListMap = new HashMap<>();
+        List<JobData> checkList = new ArrayList<>();
+
+        for (String skillName : trackSkillList) {
+            SkillData skillData = fullSkillData.stream()
+                    .filter(data -> skillName.equals(data.getSkill()))
+                    .findAny()
+                    .orElse(null);
+
+            if (skillData != null) {
+                List<JobData> jobDataList = skillData.getData();
+                if (jobDataList != null && jobDataList.size() > 0) {
+                    for (JobData thisJobData : jobDataList) {
+                        String jobTitle = thisJobData.getJobtitle();
+                        String jobIndustry = thisJobData.getIndustry();
+                        List<String> skills = thisJobData.getSkills();
+                        if (checkListMap.keySet().contains(jobTitle)) {
+                            int num = checkListMap.get(jobTitle);
+                            checkListMap.put(jobTitle, (num + 1));
+                        } else {
+                            checkListMap.put(jobTitle, 1);
+                            checkList.add(thisJobData);
+                        }
+                    }
+                }
+            }
+        }
+
+        final Map<String, Integer> sortedByCount = checkListMap.entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        
+        List<JobData> finalList = new ArrayList<>();
+        
+        sortedByCount.keySet().forEach((jobTitle) -> {
+            JobData jd = checkList.stream()
+                    .filter(data -> jobTitle.equals(data.getJobtitle()))
+                    .findAny()
+                    .orElse(null);
+            if (jd != null) {
+                finalList.add(jd);
+            }
+        });
+        skillDataList = finalList;
     }
 
     public void hasSearchItem() {
@@ -430,6 +827,33 @@ public class SearchBean {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public void hasSearchJobItem() {
+        try {
+            if (job == null) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    //insert user's job search data into database
+    public void insertJobSearchToAccessSummary(EntityManager em, String school, String jobName){
+        java.util.Date now = new Date();
+        String accessType="J";
+        AccessSummary as = new AccessSummary(now, school,accessType,null,jobName);
+        em.persist(as);
+        
+        
+    }
+    //insert user's track search data into database
+    public void insertTrackSearchToAccessSummary(EntityManager em, String school,String trackName){
+        java.util.Date now = new Date();
+        String accessType="T";
+        AccessSummary as = new AccessSummary(now, school,accessType,trackName,null);
+        em.persist(as);
     }
 
 }
