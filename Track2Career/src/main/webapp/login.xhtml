@@ -26,6 +26,7 @@
     </h:head>
     <h:body>
         <div class="limiter">
+            <f:event type="preRenderView" listener="#{search.isAuthenticated}" />
             <f:event type="preRenderView" listener="#{signup.checkMessage}" />
             <div class="container-login100" style="background-image: url('#{resource['images/careerbackground.jpg']}');">
                 <div class="wrap-login100">

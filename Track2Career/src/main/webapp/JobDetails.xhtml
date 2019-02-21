@@ -28,13 +28,11 @@
 
         <link href="https://cdn.jsdelivr.net/npm/weathericons@2.1.0/css/weather-icons.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet" />
-
-
     </h:head>
 
     <h:body>
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
-        <f:event type="preRenderView" listener="#{search.hasSearchJobItem}" />
+        <f:event type="preRenderView" listener="#{search.isPrereqJobFulfilled}" />
         <!-- Left Panel -->
         <aside id="left-panel" class="left-panel">
             <nav class="navbar navbar-expand-sm navbar-default">
@@ -101,10 +99,7 @@
             <div class="content">
                 <!-- Animated -->
                 <div class="animated fadeIn">
-                    <!-- Widgets  -->
 
-                    <!-- /Widgets -->
-                    <!--  Traffic  -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
@@ -114,74 +109,39 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
+
+                    <div class="row" style="height: 520px;">
+                        <div class="col-lg-6">
+                            <div class="card" style="height: 40%; overflow: scroll;">
                                 <div class="card-body">
-                                    <!--testing whether the salary data actually reaches the frontend
-                                    <h5>the returned min value is #{search.min}</h5>
-                                    <h5>the returned mmean value is #{search.mean}</h5>
-                                    <h5>the returned max value is #{search.max}</h5>
-                                    -->
                                 </div>
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <section>
-                                                <div class ="row">
-                                                    <div class="col-lg-6">
-                                                        
-                                                        <div class="table-stats order-table ov-h">
-                                                            <table class="table ">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Skills</th>
-                                                                        <th>Status</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <ui:repeat value="#{search.skillArr}" var="skill" varStatus="myVarStatus">
+                                            
+                                            <div class="table-stats order-table ov-h">
+                                                <table class="table ">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Skills</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{search.skillArr}" var="skill" varStatus="myVarStatus">
 
-                                                                        <tr class= "pb-0">
-                                                                            <td>
-                                                                                #{skill}
-                                                                            </td>
-                                                                            <td>
-                                                                                <span class="badge badge-complete">Acquired</span>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </ui:repeat>
-
-                                                                    <tr class= "pb-0">
-                                                                        <td>
-                                                                            sample incomplete
-                                                                        </td>
-                                                                        <td>
-                                                                            <span class="badge badge-pending">Not Yet Acquired</span>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="card">
-                                                            <div class="card-body">
-                                                                <ui:fragment rendered="#{search.min == 0}">
-                                                                    <h2 align="center">Salary Information</h2>
-                                                                    <div align="center">
-                                                                        <b>No results found for salary</b>
-                                                                    </div>
-                                                                </ui:fragment>
-                                                                <ui:fragment rendered="#{search.min > 0}">
-                                                                    <canvas id="mixChart" width="400" height="400"></canvas>
-                                                                </ui:fragment>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </section>
+                                                            <tr class= "pb-0">
+                                                                <td>
+                                                                    #{skill}
+                                                                </td>
+                                                                <td>
+                                                                    <span class="badge badge-complete">Complete</span>
+                                                                </td>
+                                                            </tr>
+                                                        </ui:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -189,9 +149,22 @@
                                 <div class="card-body"></div>
                             </div>
                         </div><!-- /# column -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <ui:fragment rendered="#{search.min == 0}">
+                                        <h2 align="center">Salary Information</h2>
+                                        <div align="center">
+                                            <b>No results found for salary</b>
+                                        </div>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{search.min > 0}">
+                                        <canvas id="mixChart" width="400" height="400"></canvas>
+                                    </ui:fragment>
+                                </div>
+                            </div>
+                        </div><!-- /# column -->
                     </div>
-
-
 
                     <div class="row">
                         <div class="col-lg-12">
@@ -199,22 +172,40 @@
                                 <div class="card-body">
                                     <h4 class="box-title">Career Pathway</h4>
                                     <div class="row">
-                                        <ui:repeat value="#{search.careerPath}" var="career" varStatus="myVarStatus">
+                                        <ui:fragment rendered="#{search.careerPath.size() == 0}">
                                             <div class="col-lg-4 col-md-6" style="cursor: pointer;">
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <div class="stat-widget-five">
                                                             <div class="stat-icon dib flat-color-3">
-                                                                <i class="#{myVarStatus.index == 0 ? 'pe-7s-rocket' : 'pe-7s-angle-right-circle'}"></i>
+                                                                <i class="pe-7s-rocket"></i>
                                                             </div>
                                                             <div class="stat-content">
-                                                                <div class="stat-text">#{career}</div>
+                                                                <div class="stat-text">#{search.job}</div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </ui:repeat>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{search.careerPath.size() > 0}">
+                                            <ui:repeat value="#{search.careerPath}" var="career" varStatus="myVarStatus">
+                                                <div class="col-lg-4 col-md-6" style="cursor: pointer;">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="stat-widget-five">
+                                                                <div class="stat-icon dib flat-color-3">
+                                                                    <i class="#{myVarStatus.index == 0 ? 'pe-7s-rocket' : 'pe-7s-angle-right-circle'}"></i>
+                                                                </div>
+                                                                <div class="stat-content">
+                                                                    <div class="stat-text">#{career}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ui:repeat>
+                                        </ui:fragment>
                                     </div>
                                 </div>
                             </div>
@@ -275,66 +266,16 @@
         <script src="http://code.highcharts.com/highcharts.js"></script>
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
         <h:outputScript name="js/tracksspecificskills.js"/>
-        <h:outputScript>
-            //<![CDATA[
-
-            Min_Salary = #{search.min};
-            Max_Salary=#{search.max};
-            Mean_Salary=#{search.mean};
-            Medium_Salary=#{search.mean};
-
-            //]]>
-        </h:outputScript>
         <script>
-//            $(function () {
-//                var chart;
-//                $(document).ready(function () {
-//                    chart = new Highcharts.Chart({
-//                        chart: {
-//                            renderTo: 'SalaryContainer',
-//                            type: 'bar'
-//                        },
-//                        title: {
-//                            text: 'Salary Information'
-//                        },
-//                        subtitle: {
-//                            text: ''
-//                        },
-//                        xAxis: {
-//                            categories: ['Salary']
-//                        },
-//                        series: [{
-//                                name: 'max',
-//                                stacking: true,
-//                                color: 'red',
-//                                data: [
-//                                    []
-//                                ]
-//                            }, {
-//                                name: 'min',
-//                                stacking: true,
-//                                color: 'blue',
-//                                data: [
-//                                    []
-//                                ]
-//                            }, {
-//                                type: 'scatter',
-//                                name: 'avg',
-//                                color: 'black',
-//                                data: [
-//                                    []
-//                                ]
-//                            }]
-//                    });
-//                });
-//
-//            });
-
             var labels = [
                 "Min Salary",
-                "Medium Salary",
+                "Median Salary",
                 "Max Salary"
             ];
+            Min_Salary = #{search.min};
+            Max_Salary = #{search.max};
+            Mean_Salary = #{search.mean};
+            Median_Salary = #{search.median};
 //        Min_Salary = 1500;
 //            Max_Salary=7500;
 //            Mean_Salary=4000;
@@ -346,7 +287,7 @@
             ];
             var generalInfo = [
                 Min_Salary,
-                Medium_Salary,
+                Median_Salary,
                 Max_Salary
             ];
             var mix = document.getElementById("mixChart").getContext('2d');
@@ -394,8 +335,6 @@
                 }
             });
         </script>
-
-
         <!--Local Stuff-->
 
     </h:body>

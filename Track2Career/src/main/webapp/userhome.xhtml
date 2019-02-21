@@ -219,7 +219,7 @@ and open the template in the editor.
     </h:head>
 
     <h:body>
-        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
+        <f:event type="preRenderView" listener="#{search.isAuthenticated}" />
         <!-- Left Panel -->
         <aside id="left-panel" class="left-panel">
             <nav class="navbar navbar-expand-sm navbar-default">
@@ -230,7 +230,7 @@ and open the template in the editor.
                         </li>
                         <li class="menu-title">User Profile</li><!-- /.menu-title -->
                         <li>
-                            <a href="profile.jsf"> <i class="menu-icon fa fa-id-card-o"></i>Update Information </a>
+                            <a href="profile.jsf"> <i class="menu-icon fa fa-user"></i>Update Information </a>
 
                         </li>
 
@@ -238,12 +238,12 @@ and open the template in the editor.
 
 
                         <li>
-                            <a href="widgets.html"> <i class="menu-icon fa fa-file-pdf-o"></i>My Reports </a>
+                            <a href="widgets.html"> <i class="menu-icon fa fa-bookmark"></i>My Reports </a>
                         </li>
 
                         <li class="menu-title">Skills</li><!-- /.menu-title -->
                         <li>
-                            <a href="widgets.html"> <i class="menu-icon  fa fa-mortar-board"></i>My Skills </a>
+                            <a href="widgets.html"> <i class="menu-icon  fa fa-certificate"></i>My Skills </a>
                         </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->

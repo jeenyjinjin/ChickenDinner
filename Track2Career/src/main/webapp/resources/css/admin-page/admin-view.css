@@ -1826,7 +1826,6 @@ header .form-inline {
 
 .input-group-addon {
   padding: .5rem .75rem;
-  width: 9%;
   margin-bottom: 0;
   font-size: 1rem;
   font-weight: 400;
@@ -2043,7 +2042,8 @@ header .form-inline {
     top: 20px; }
   .stat-widget-five .stat-content {
     /*margin-left: 100px;*/ 
-    margin-left: 75px;
+    /*margin-left: 75px;*/
+    margin-left: 70px;
   }
   .stat-widget-five .stat-text {
     color: #455a64;

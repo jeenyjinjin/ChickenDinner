@@ -1,9 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -29,21 +23,14 @@ and open the template in the editor.
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <h:outputStylesheet name="css/admin-page/cs-skin-elastic.css" />
         <h:outputStylesheet name="css/admin-page/admin-view.css" />
-        <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
         <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet"/>
         <link href="https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jqvmap.min.css" rel="stylesheet"/>
 
         <link href="https://cdn.jsdelivr.net/npm/weathericons@2.1.0/css/weather-icons.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet" />
-
-
-
-
     </h:head>
-
     <h:body>
-        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
-        <f:event type="preRenderView" listener="#{search.hasSearchItem}" />
+        <f:event type="preRenderView" listener="#{search.isPrereqTrackFulfilled}" />
         <f:event type="preRenderView" listener="#{search.getRelatedJobs}" />
         <!-- Left Panel -->
         <aside id="left-panel" class="left-panel">
@@ -56,16 +43,11 @@ and open the template in the editor.
                         <li class="menu-title">User Profile</li><!-- /.menu-title -->
                         <li>
                             <a href="profile.jsf"> <i class="menu-icon fa fa-user"></i>Update Information </a>
-
                         </li>
-
                         <li class="menu-title">Generated Reports</li><!-- /.menu-title -->
-
-
                         <li>
                             <a href="widgets.html"> <i class="menu-icon fa fa-bookmark"></i>My Reports </a>
                         </li>
-
                         <li class="menu-title">Skills</li><!-- /.menu-title -->
                         <li>
                             <a href="widgets.html"> <i class="menu-icon  fa fa-certificate"></i>My Skills </a>
@@ -81,7 +63,6 @@ and open the template in the editor.
             <header id="header" class="header">
                 <div class="top-left">
                     <div class="navbar-header">
-
                         <a class="navbar-brand" href="./"><img src="#{resource['images/UserHomeTemp.png']}" alt="Logo"/></a>
                         <a class="navbar-brand hidden" href="./"><img src="#{resource['images/UserHomeTemp.png']}" alt="Logo"/></a>
                         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
@@ -89,20 +70,14 @@ and open the template in the editor.
                 </div>
                 <div class="top-right">
                     <div class="header-menu">
-
-
                         <div class="user-area dropdown float-right">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="user-avatar rounded-circle" src="#{resource['images/regandemo.jpg']}" alt="User Avatar"/>
                             </a>
-
                             <div class="user-menu dropdown-menu">
-
-
                                 <h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </header>
@@ -158,7 +133,7 @@ and open the template in the editor.
                                         </div>
                                         <div class="stat-content">
                                             <div class="text-left dib">
-                                                <div class="stat-text"><span class="count">#{search.skillDataList.size()/2}</span></div>
+                                                <div class="stat-text"><span class="count">#{search.skillDataList.size()}</span></div>
                                                 <div class="stat-heading">Related Jobs</div>
                                             </div>
                                         </div>
@@ -166,8 +141,6 @@ and open the template in the editor.
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <!-- /Widgets -->
                     <!--  Traffic  -->
@@ -183,7 +156,6 @@ and open the template in the editor.
                                             <p>Students doing the Digital Business Solutioning Track will learn how to ideate, design and develop IT solutions that will leverage digital technologies (like cloud computing, big data and analytics, mobile networks, social media, Internet of Things) to enhance operational excellence, integrate information-processes-people, and drive product and process innovation.</p>
                                             <br/>
                                             <p class="courses" style="font-weight: bold; text-decoration: underline;">Courses in this track:</p>
-
                                             <h:form>
                                                 <ui:repeat var="c" value="#{search.courseList}" varStatus="status">
                                                     <article class="search-result row">

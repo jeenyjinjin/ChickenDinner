@@ -11,7 +11,7 @@ $(document).ready(function() {
         else {
             $(".viewMore").hide('fast');
             $('html, body').animate({
-                scrollTop: $("#skill-overview").offset().top - 100
+                scrollTop: $("#top").offset().top - 100
             }, 1000);
             $(this).text("Show more skills");
         }

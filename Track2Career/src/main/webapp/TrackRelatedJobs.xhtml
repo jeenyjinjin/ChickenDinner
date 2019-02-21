@@ -13,7 +13,7 @@ and open the template in the editor.
     <h:head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <title>Track2Career Admin Template</title>
+        <title>Track2Career</title>
         <meta name="description" content="Ela Admin - HTML5 Admin Template"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -29,22 +29,15 @@ and open the template in the editor.
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <h:outputStylesheet name="css/admin-page/cs-skin-elastic.css" />
         <h:outputStylesheet name="css/admin-page/admin-view.css" />
-        <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
         <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet"/>
         <link href="https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jqvmap.min.css" rel="stylesheet"/>
 
         <link href="https://cdn.jsdelivr.net/npm/weathericons@2.1.0/css/weather-icons.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet" />
-
-
-
-
     </h:head>
 
     <h:body>
-        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
-        <f:event type="preRenderView" listener="#{search.hasSearchItem}" />
-        <f:event type="preRenderView" listener="#{search.getRelatedJobs}" />
+        <f:event type="preRenderView" listener="#{search.isPrereqTrackFulfilled}" />
         <!-- Left Panel -->
         <aside id="left-panel" class="left-panel">
             <nav class="navbar navbar-expand-sm navbar-default">
@@ -158,7 +151,7 @@ and open the template in the editor.
                                         </div>
                                         <div class="stat-content">
                                             <div class="text-left dib">
-                                                <div class="stat-text"><span class="count">#{search.skillDataList.size()/2}</span></div>
+                                                <div class="stat-text"><span class="count">#{search.skillDataList.size()}</span></div>
                                                 <div class="stat-heading">Related Jobs</div>
                                             </div>
                                         </div>
@@ -184,11 +177,15 @@ and open the template in the editor.
                                             <br/>
                                             <h:form>
                                                 <ui:repeat value="#{search.skillDataList}" var="job" varStatus="myVarStatus">
-                                                    <p:fieldset legend="#{job.jobtitle}" style="margin-bottom:20px">
-                                                        <h:panelGrid columns="2">
-                                                            <h:outputText value="Industry: " style="font-weight:bold"/> #{job.industry}
-                                                        </h:panelGrid>
-                                                    </p:fieldset>
+                                                    <p:commandLink action="#{search.navigateToJob}" style="color: black;text-decoration: none;">
+                                                        <f:param name="job" value="#{job.jobtitle}" />
+                                                        <f:param name="industry" value="#{job.industry}" />
+                                                        <p:fieldset legend="#{job.jobtitle}" style="margin-bottom:20px;cursor: pointer">
+                                                            <h:panelGrid columns="2">
+                                                                <h:outputText value="Industry: " style="font-weight:bold"/> #{job.industry}
+                                                            </h:panelGrid>
+                                                        </p:fieldset>
+                                                    </p:commandLink>
                                                 </ui:repeat>
                                             </h:form>
                                         </div>
@@ -211,22 +208,6 @@ and open the template in the editor.
             <div class="clearfix"></div>
             <!-- Footer -->
             <footer class="site-footer">
-                <div class="checkout-wrap">
-            <ul class="checkout-bar">
-                <li class="visited first">
-                    <h:link value="Search" outcome="userhome" />
-                </li>
-                <li class="visited first">
-                    <h:link value="Track Overview" outcome="TrackDetails" />
-                </li>
-                <li class="visited first">
-                    <h:link value="Track Specific Skills" outcome="TrackSkills" />
-                </li>
-                <li class="active last">
-                    <h:link value="Track Related Jobs" outcome="TrackRelatedJobs" />
-                </li>
-            </ul>
-        </div>
                 <div class="footer-inner bg-white">
                     <div class="row">
                         <div class="col-sm-6">
@@ -265,12 +246,6 @@ and open the template in the editor.
         <h:outputScript name="js/Admin/weather-init.js"/>
 
         <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
-
-
-
-
-
         <!--Local Stuff-->
-
     </h:body>
 </html>

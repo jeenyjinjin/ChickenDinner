@@ -6,13 +6,10 @@ import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import javax.persistence.*;
 import com.edu.smu.track2career.manager.*;
-import java.util.*;
-import javax.faces.event.AjaxBehaviorEvent;
-
 import com.google.gson.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-
+import java.util.*;
+import javax.faces.event.AjaxBehaviorEvent;
 
 @ManagedBean(name = "user", eager = true)
 @SessionScoped
@@ -37,6 +34,8 @@ public class UserBean implements Serializable {
     public List<Course> courses;
     public LinkedHashSet<String> skills;
     
+    
+    
     //for admin page, it will run when the user login as type admin
     public Integer totalUserCount;
     public Integer newUserCount;
@@ -47,8 +46,6 @@ public class UserBean implements Serializable {
     public JsonObject trafficBreackDownByTrack;
     public List<List<String>> popularJobsRanking;
     public JsonObject schoolDistribution;
-    
-    
 
     public UserBean() {
         fullName = "Regan Seah";
@@ -270,22 +267,20 @@ public class UserBean implements Serializable {
     public void setSchoolDistribution(JsonObject schoolDistribution) {
         this.schoolDistribution = schoolDistribution;
     }
-
-    
-    
     
 
-    
-    
-
-    public void checkLoggedIn() {
-        try {
-            if (user == null) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("login.jsf");
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    public boolean checkLoggedIn() {
+        if (user == null) {
+            return false;
         }
+        return true;
+//        try {
+//            if (user == null) {
+//                FacesContext.getCurrentInstance().getExternalContext().redirect("login.jsf");
+//            }
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     public void selectCourse(AjaxBehaviorEvent e) {
@@ -376,7 +371,6 @@ public class UserBean implements Serializable {
             if (user != null&&user.getUserType().equals("Student")) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
             }else if(user != null&&user.getUserType().equals("Admin")){
-                
                 //start of retrieving a overall user stats, when the table gets larger, it will take more time
                 //by that time we graduate already:)
                 //so there is no need for a special cron job to save cpu power
@@ -524,12 +518,9 @@ public class UserBean implements Serializable {
                     e.printStackTrace();
                 }
                 
-                
-                
-                
-                
-                
                 FacesContext.getCurrentInstance().getExternalContext().redirect("admin.jsf");
+                
+                
             }
 
         } catch (Exception e) {

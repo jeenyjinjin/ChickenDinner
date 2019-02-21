@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.text.similarity.JaccardSimilarity;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -24,7 +25,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-
 
 @ManagedBean(name = "search", eager = true)
 @SessionScoped
@@ -35,6 +35,7 @@ public class SearchBean {
     private int min;
     private int max;
     private int mean;
+    private int median;
     private List<String> careerPath;
 
     private List<String> skillArr;
@@ -52,13 +53,12 @@ public class SearchBean {
 
     private String track;
     private List<Track> initialTracks;
-    
-    
 
     // search results storage
     private List<Course> courseList;
     private ArrayList<ArrayList<Custom>> achievedList;
     private ArrayList<ArrayList<Custom>> unachievedList;
+    private LinkedHashMap<String, ArrayList<ArrayList<Custom>>> trackSkillMap;
     private ArrayList<Custom> topFifteenSkills;
     private JsonObject courseInTree;
 
@@ -155,6 +155,14 @@ public class SearchBean {
 
     public void setMean(int mean) {
         this.mean = mean;
+    }
+
+    public int getMedian() {
+        return median;
+    }
+
+    public void setMedian(int median) {
+        this.median = median;
     }
 
     public List<String> getCareerPath() {
@@ -261,6 +269,14 @@ public class SearchBean {
         this.unachievedList = unachievedList;
     }
 
+    public LinkedHashMap<String, ArrayList<ArrayList<Custom>>> getTrackSkillMap() {
+        return trackSkillMap;
+    }
+
+    public void setTrackSkillMap(LinkedHashMap<String, ArrayList<ArrayList<Custom>>> trackSkillMap) {
+        this.trackSkillMap = trackSkillMap;
+    }
+
     public ArrayList<Custom> getTopFifteenSkills() {
         return topFifteenSkills;
     }
@@ -337,10 +353,8 @@ public class SearchBean {
     }
 
     public void onIndustrySelected() throws IOException {
-        int industryId = industryList.indexOf(industry);
-        //current issue: most times the insertion is okay, however, when the industry is onselected and there is wage, the data will be inserted twoce
-        //good to solve this issue, it's okay to leaved it, cuz it's a very rare case
-        //added entitymanager to insert user job search records to database
+        TopDocs industryResults = LuceneManager.searchIndustryQuery(industry);
+        int industryId = -1;
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
@@ -353,6 +367,19 @@ public class SearchBean {
             System.out.println("database insertion error");
             e.printStackTrace();
         }
+        if (industryResults.scoreDocs.length > 0) {
+            ScoreDoc doc = industryResults.scoreDocs[0];
+            int docId = doc.doc;
+
+            IndexReader reader = DirectoryReader.open(LuceneManager.industryIndex);
+            IndexSearcher searcher = new IndexSearcher(reader);
+
+            Document thisDoc = searcher.doc(docId);
+            String docIndustryName = thisDoc.get("industry");
+
+            industryId = industryList.indexOf(docIndustryName);
+        }
+
         try {
             // Retrieve the skills for the specified job
             String url = "https://jobsense.sg/api/get/job-skill-gind-for-g-job/";
@@ -368,38 +395,37 @@ public class SearchBean {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
         try {
             // Retrieve salary information for the specific job
             String url = "https://research.larc.smu.edu.sg/wagedb/api/get-salary-info/";
             String urlParameters = "jobtitle=" + job + "&industry=" + industry;
-//            
+
             JsonObject results = RestfulManager.sendPostWageDb(url, urlParameters);
             if (!results.get("status").getAsBoolean()) {
                 min = 0;
                 mean = 0;
+                median = 0;
                 max = 0;
-            }
-            else {
+            } else {
                 JsonObject salaryInfo = results.get("salary-info").getAsJsonObject().get("salary-info").getAsJsonObject();
 
                 min = salaryInfo.get("min-salary").getAsInt();
                 mean = salaryInfo.get("mean-salary").getAsInt();
+                median = salaryInfo.get("median-salary").getAsInt();
                 max = salaryInfo.get("max-salary").getAsInt();
             }
-//            System.out.println(results);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
         try {
             careerPath = new ArrayList<>();
-            
+
             // Retrieve the skills for the specified job
             String url = "https://jobsense.sg/api/get/js-2-pop-career-path/";
             String urlParameters = "{ \"jobtitle\" : \"" + job.toLowerCase() + "\", \"industry_id\" : " + industryId + "}";
-            
+
             JsonObject careerPathResults = RestfulManager.sendPost(url, urlParameters);
             if (careerPathResults.get("status").getAsBoolean()) {
                 JsonArray careerPathList1 = careerPathResults.get("data").getAsJsonArray();
@@ -410,28 +436,29 @@ public class SearchBean {
                     careerPath.add(StringManager.convertToTitleCaseIteratingChars(jobtitle));
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
         FacesContext.getCurrentInstance().getExternalContext().redirect("JobDetails.jsf");
     }
 
     public void submitJob() throws IOException {
-        int industryId = industryList.indexOf(industry);
-        //added entitymanager to insert user job search records to database
-//        EntityManager em = PersistenceManager.getEntityManager();
-//        em.getTransaction().begin();
-//        UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
-//        
-//        try{
-//            insertJobSearchToAccessSummary(em, ub.getUser().getSchool(),job);
-//            em.getTransaction().commit();
-//        }catch(Exception e){
-//            System.out.println("database insertion error");
-//            e.printStackTrace();
-//        }
+        TopDocs industryResults = LuceneManager.searchIndustryQuery(industry);
+        int industryId = -1;
+        if (industryResults.scoreDocs.length > 0) {
+            ScoreDoc doc = industryResults.scoreDocs[0];
+            int docId = doc.doc;
+
+            IndexReader reader = DirectoryReader.open(LuceneManager.industryIndex);
+            IndexSearcher searcher = new IndexSearcher(reader);
+
+            Document thisDoc = searcher.doc(docId);
+            String docIndustryName = thisDoc.get("industry");
+
+            industryId = industryList.indexOf(docIndustryName);
+        }
+
         try {
             // Retrieve the skills for the specified job
             String url = "https://jobsense.sg/api/get/job-skill-gind-for-g-job/";
@@ -444,11 +471,10 @@ public class SearchBean {
 
             List<String> yourList = new Gson().fromJson(arr, listType);
             skillArr = yourList;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
         try {
             // Retrieve salary information for the specific job
             String url = "https://research.larc.smu.edu.sg/wagedb/api/get-salary-info/";
@@ -458,50 +484,47 @@ public class SearchBean {
             if (!results.get("status").getAsBoolean()) {
                 min = 0;
                 mean = 0;
+                median = 0;
                 max = 0;
-            }
-            else {
+            } else {
                 JsonObject salaryInfo = results.get("salary-info").getAsJsonObject().get("salary-info").getAsJsonObject();
 
                 min = salaryInfo.get("min-salary").getAsInt();
                 mean = salaryInfo.get("mean-salary").getAsInt();
+                median = salaryInfo.get("median-salary").getAsInt();
                 max = salaryInfo.get("max-salary").getAsInt();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
         try {
             careerPath = new ArrayList<>();
-            
+
             // Retrieve the skills for the specified job
             String url = "https://jobsense.sg/api/get/js-2-pop-career-path/";
             String urlParameters = "{ \"jobtitle\" : \"" + job.toLowerCase() + "\", \"industry_id\" : " + industryId + "}";
-            
+
             JsonObject careerPathResults = RestfulManager.sendPost(url, urlParameters);
             if (careerPathResults.get("status").getAsBoolean()) {
                 JsonArray careerPathList1 = careerPathResults.get("data").getAsJsonArray();
-                JsonArray careerPathList2=careerPathList1.get(0).getAsJsonArray();
+                JsonArray careerPathList2 = careerPathList1.get(0).getAsJsonArray();
                 for (JsonElement elem : careerPathList2) {
                     JsonObject career = elem.getAsJsonObject();
                     String jobtitle = career.get("jobtitle").getAsString();
-                    
                     careerPath.add(StringManager.convertToTitleCaseIteratingChars(jobtitle));
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
         FacesContext.getCurrentInstance().getExternalContext().redirect("JobDetails.jsf");
     }
 
     public void submitTrack() throws IOException {
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
-        
         try {
 
             // Retrieve all courses in the specified track
@@ -525,7 +548,7 @@ public class SearchBean {
             // scan through the skillList and populate the skills with a score into the map
             while (iterator.hasNext()) {
                 String skillName = iterator.next();
-                
+
                 TopDocs results = LuceneManager.searchQuery(skillName);
                 Float score = results.getMaxScore();
 
@@ -670,7 +693,11 @@ public class SearchBean {
             if (unachievedTemp != null && !unachievedTemp.isEmpty()) {
                 unachievedList.add(unachievedTemp);
             }
-
+            
+            trackSkillMap = new LinkedHashMap<>();
+            trackSkillMap.put("Skills achieved from this Track", achievedList);
+            trackSkillMap.put("Skills unachieved from this Track", unachievedList);
+            
             //Return visualisable json data
             //Naming conflicts in jsonx.json library and gson.json library
             //the main logic is To retrieve relative course and skill information based on the track submitted
@@ -760,10 +787,10 @@ public class SearchBean {
             }
 
             skillInBubble = finalBubble;
-            
             //insert tracksearch data into database
             insertTrackSearchToAccessSummary(em, ub.getUser().getSchool(),track);
             em.getTransaction().commit();
+            
             FacesContext.getCurrentInstance().getExternalContext().redirect("TrackDetails.jsf");
         } catch (IOException e) {
             e.printStackTrace();
@@ -774,49 +801,145 @@ public class SearchBean {
         List<SkillData> fullSkillData = DataService.retrieveSkillJobData();
         Map<String, Integer> checkListMap = new HashMap<>();
         List<JobData> checkList = new ArrayList<>();
-
-        for (String skillName : trackSkillList) {
-            SkillData skillData = fullSkillData.stream()
+        
+        if (trackSkillList != null && trackSkillList.size() > 0) {
+            trackSkillList.stream().map((skillName) -> fullSkillData.stream()
                     .filter(data -> skillName.equals(data.getSkill()))
                     .findAny()
-                    .orElse(null);
-
-            if (skillData != null) {
-                List<JobData> jobDataList = skillData.getData();
-                if (jobDataList != null && jobDataList.size() > 0) {
-                    for (JobData thisJobData : jobDataList) {
-                        String jobTitle = thisJobData.getJobtitle();
-                        String jobIndustry = thisJobData.getIndustry();
-                        List<String> skills = thisJobData.getSkills();
-                        if (checkListMap.keySet().contains(jobTitle)) {
-                            int num = checkListMap.get(jobTitle);
-                            checkListMap.put(jobTitle, (num + 1));
-                        } else {
-                            checkListMap.put(jobTitle, 1);
-                            checkList.add(thisJobData);
+                    .orElse(null)).filter((skillData) -> (skillData != null)).map((skillData) -> skillData.getData()).filter((jobDataList) -> (jobDataList != null && jobDataList.size() > 0)).forEachOrdered((jobDataList) -> {
+                        for (JobData thisJobData : jobDataList) {
+                            String jobTitle = thisJobData.getJobtitle();
+                            String jobIndustry = thisJobData.getIndustry();
+                            List<String> skills = thisJobData.getSkills();
+                            if (checkListMap.keySet().contains(jobTitle)) {
+                                int num = checkListMap.get(jobTitle);
+                                checkListMap.put(jobTitle, (num + 1));
+                            } else {
+                                checkListMap.put(jobTitle, 1);
+                                checkList.add(thisJobData);
+                            }
                         }
+            });
+
+            final Map<String, Integer> sortedByCount = checkListMap.entrySet()
+                    .stream()
+                    .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            List<JobData> finalList = new ArrayList<>();
+            int count = 0;
+
+            sortedByCount.keySet().forEach((jobTitle) -> {
+                JobData jd = checkList.stream()
+                        .filter(data -> jobTitle.equals(data.getJobtitle()))
+                        .findAny()
+                        .orElse(null);
+                if (jd != null) {
+                    if (finalList.size() < 15) {
+                        finalList.add(jd);
                     }
                 }
-            }
+            });
+            skillDataList = finalList;
         }
+    }
 
-        final Map<String, Integer> sortedByCount = checkListMap.entrySet()
-                .stream()
-                .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    public void navigateToJob() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        String jobName = request.getParameter("job");
+        String industryName = request.getParameter("industry");
+
+        job = jobName;
+        industry = industryName;
+        submitJob();
+    }
+
+    /**
+     * This method checks if user is logged in or not. If user is not logged in,
+     * they will be sent back to login.jsf
+     */
+    public void isAuthenticated() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String uri = request.getRequestURI();
+        String fileName = uri.split("/")[uri.split("/").length - 1];
         
-        List<JobData> finalList = new ArrayList<>();
-        
-        sortedByCount.keySet().forEach((jobTitle) -> {
-            JobData jd = checkList.stream()
-                    .filter(data -> jobTitle.equals(data.getJobtitle()))
-                    .findAny()
-                    .orElse(null);
-            if (jd != null) {
-                finalList.add(jd);
+        try {
+            UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+            boolean isLoggedIn = ub != null && ub.getUser() != null;
+            if (!isLoggedIn) {
+                if (!fileName.equals("login.jsf")) {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("login.jsf");
+                }
             }
-        });
-        skillDataList = finalList;
+            else {
+                if (fileName.equals("login.jsf")) {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    
+    /**
+     * This method checks if user is logged in or not [AND] if there are any tracks being searched at the moment. 
+     * If user is not logged in, they will be sent back to login.jsf
+     * If user is logged in AND no tracks are being searched BUT user is at TrackDetails.jsf, they will be sent back to userhome.jsf
+     */
+    public void isPrereqTrackFulfilled() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String uri = request.getRequestURI();
+        String fileName = uri.split("/")[uri.split("/").length - 1];
+        
+        try {
+            // check if user if logged in
+            UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+            boolean isLoggedIn = ub.getUser() != null;
+            if (!isLoggedIn) {
+                if (!fileName.equals("login.jsf")) {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("login.jsf");
+                    return;
+                }
+            }
+            // check if any track is being searched at the moment
+            if (courseList == null) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    
+    /**
+     * This method checks if user is logged in or not [AND] if there are any jobs being searched at the moment. 
+     * If user is not logged in, they will be sent back to login.jsf
+     * If user is logged in AND no jobs are being searched BUT user is at JobDetails.jsf, they will be sent back to userhome.jsf
+     */
+    public void isPrereqJobFulfilled() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String uri = request.getRequestURI();
+        String fileName = uri.split("/")[uri.split("/").length - 1];
+        
+        try {
+            // check if user if logged in
+            UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+            boolean isLoggedIn = ub.getUser() != null;
+            if (!isLoggedIn) {
+                if (!fileName.equals("login.jsf")) {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("login.jsf");
+                    return;
+                }
+            }
+            // check if any track is being searched at the moment
+            if (job == null) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void hasSearchItem() {
@@ -828,11 +951,12 @@ public class SearchBean {
             ex.printStackTrace();
         }
     }
-    
+
     public void hasSearchJobItem() {
         try {
             if (job == null) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
+                return;
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -855,5 +979,4 @@ public class SearchBean {
         AccessSummary as = new AccessSummary(now, school,accessType,trackName,null);
         em.persist(as);
     }
-
 }
