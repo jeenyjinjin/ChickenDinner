@@ -62,7 +62,6 @@ public class CourseBean {
     }
 
     public void viewMore() {
-
         EntityManager em = PersistenceManager.getEntityManager();
         em.getTransaction().begin();
         try {         

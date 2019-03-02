@@ -267,7 +267,6 @@ public class UserBean implements Serializable {
     public void setSchoolDistribution(JsonObject schoolDistribution) {
         this.schoolDistribution = schoolDistribution;
     }
-    
 
     public boolean checkLoggedIn() {
         if (user == null) {
@@ -376,14 +375,14 @@ public class UserBean implements Serializable {
                 //so there is no need for a special cron job to save cpu power
                 try{
                     TypedQuery<Long> getTotalUserQuery = em.createQuery("select count(u) from User u",Long.class);
-                    totalUserCount = ((Long)getTotalUserQuery.getSingleResult()).intValue();
+                    totalUserCount = (getTotalUserQuery.getSingleResult()).intValue();
                 }catch(Exception e){
                     e.printStackTrace();
                     System.out.println("data retrieval error");
                 }
                 try{
                     TypedQuery<Long> getTotalSearches = em.createQuery("select count(a) from AccessSummary a",Long.class);
-                    totalSearches = ((Long)getTotalSearches.getSingleResult()).intValue();
+                    totalSearches = (getTotalSearches.getSingleResult()).intValue();
                 }catch(Exception e){
                     e.printStackTrace();
                     System.out.println("data retrieval error");
@@ -405,7 +404,7 @@ public class UserBean implements Serializable {
                             
                             int currentTrackSearches = ((Long)row[1]).intValue();
                             tempTrackHistoryBreakDown.addProperty(currentTrackName, currentTrackSearches);
-                            if(currentTrackSearches>largestCount){
+                            if(currentTrackSearches > largestCount){
                                 largestCount = currentTrackSearches;
                                 mostPopularTrackName = currentTrackName;
                             }
@@ -414,7 +413,7 @@ public class UserBean implements Serializable {
                     }
                     mostPopularTrack = mostPopularTrackName;
                     trafficBreackDownByTrack = tempTrackHistoryBreakDown;
-                    System.out.println("testing display: most popular track is "+ mostPopularTrack);
+                    System.out.println("testing display: most popular track is " + mostPopularTrack);
                 }catch(Exception e){
                     e.printStackTrace();
                     System.out.println("data retrieval error");
@@ -452,7 +451,7 @@ public class UserBean implements Serializable {
                             String jobName= String.valueOf(currentPair[0]);
                             String count = String.valueOf(currentPair[1]);
                             System.out.println("testing topjobs : "+ jobName + count);
-                            List<String> tempJobArr = new ArrayList<String>();
+                            List<String> tempJobArr = new ArrayList<>();
                             tempJobArr.add(jobName);
                             tempJobArr.add(count);
                             tempPopularJobs.add(tempJobArr);

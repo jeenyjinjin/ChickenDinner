@@ -39,6 +39,11 @@ public class SearchBean {
     private List<String> careerPath;
 
     private List<String> skillArr;
+    private List<Boolean> skillStatusArr;
+    
+    private String missingSkill;
+    private List<Course> skillToCourses;
+    private List<String> skillToCoursesTrackLabels;
 
     private ArrayList<String> jobArr;
     private JsonArray fullData;
@@ -179,6 +184,38 @@ public class SearchBean {
 
     public void setSkillArr(List<String> skillArr) {
         this.skillArr = skillArr;
+    }
+
+    public List<Boolean> getSkillStatusArr() {
+        return skillStatusArr;
+    }
+
+    public void setSkillStatusArr(List<Boolean> skillStatusArr) {
+        this.skillStatusArr = skillStatusArr;
+    }
+
+    public String getMissingSkill() {
+        return missingSkill;
+    }
+
+    public void setMissingSkill(String missingSkill) {
+        this.missingSkill = missingSkill;
+    }
+
+    public List<Course> getSkillToCourses() {
+        return skillToCourses;
+    }
+
+    public void setSkillToCourses(List<Course> skillToCourses) {
+        this.skillToCourses = skillToCourses;
+    }
+
+    public List<String> getSkillToCoursesTrackLabels() {
+        return skillToCoursesTrackLabels;
+    }
+
+    public void setSkillToCoursesTrackLabels(List<String> skillToCoursesTrackLabels) {
+        this.skillToCoursesTrackLabels = skillToCoursesTrackLabels;
     }
 
     public ArrayList<String> getSearchIndustryList() {
@@ -354,19 +391,8 @@ public class SearchBean {
 
     public void onIndustrySelected() throws IOException {
         TopDocs industryResults = LuceneManager.searchIndustryQuery(industry);
+        skillStatusArr = new ArrayList<>();
         int industryId = -1;
-        EntityManager em = PersistenceManager.getEntityManager();
-        em.getTransaction().begin();
-        UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
-        //insert job search data into database
-        
-        try{
-            insertJobSearchToAccessSummary(em, ub.getUser().getSchool(),job);
-            em.getTransaction().commit();
-        }catch(Exception e){
-            System.out.println("database insertion error");
-            e.printStackTrace();
-        }
         if (industryResults.scoreDocs.length > 0) {
             ScoreDoc doc = industryResults.scoreDocs[0];
             int docId = doc.doc;
@@ -396,6 +422,52 @@ public class SearchBean {
             System.out.println(e.getMessage());
         }
 
+        for (String skill : skillArr) {
+            try {
+                JaccardSimilarity similarity = new JaccardSimilarity();
+                TopDocs results = LocalLuceneManager.searchQuery(skill);
+                String selected = "";
+                Double score = 0.0;
+                if (results.scoreDocs.length > 0) {
+                    for (ScoreDoc doc : results.scoreDocs) {
+                        int docId = doc.doc;
+
+                        IndexReader reader = DirectoryReader.open(LocalLuceneManager.index);
+                        IndexSearcher searcher = new IndexSearcher(reader);
+
+                        Document thisDoc = searcher.doc(docId);
+                        String docSkillName = thisDoc.get("skill");
+
+                        Double calculatedScore = similarity.apply(skill, docSkillName);
+                        if (calculatedScore > score) {
+                            score = calculatedScore;
+                            selected = docSkillName;
+                        }
+                    }
+                    
+                    // Retrieve userbean session
+                    UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+                    String userId = ub.getUser().getUserId();
+                    
+                    EntityManager em = PersistenceManager.getEntityManager();
+                    em.getTransaction().begin();
+
+                    TypedQuery<String> skillQuery = em.createQuery("SELECT s.skillName FROM UserCourse uc, Skill s WHERE uc.userId.userId = ?1 AND uc.courseId.courseId = s.skillPK.courseId AND s.skillName = ?2", String.class);
+                    skillQuery.setParameter(1, userId);
+                    skillQuery.setParameter(2, selected);
+                    List<String> skills = skillQuery.getResultList();
+                    
+                    skillStatusArr.add(!skills.isEmpty());
+                }
+                else {
+                    skillStatusArr.add(false);
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
         try {
             // Retrieve salary information for the specific job
             String url = "https://research.larc.smu.edu.sg/wagedb/api/get-salary-info/";
@@ -445,6 +517,7 @@ public class SearchBean {
 
     public void submitJob() throws IOException {
         TopDocs industryResults = LuceneManager.searchIndustryQuery(industry);
+        skillStatusArr = new ArrayList<>();
         int industryId = -1;
         if (industryResults.scoreDocs.length > 0) {
             ScoreDoc doc = industryResults.scoreDocs[0];
@@ -475,6 +548,52 @@ public class SearchBean {
             System.out.println(e.getMessage());
         }
 
+        for (String skill : skillArr) {
+            try {
+                JaccardSimilarity similarity = new JaccardSimilarity();
+                TopDocs results = LocalLuceneManager.searchQuery(skill);
+                String selected = "";
+                Double score = 0.0;
+                if (results.scoreDocs.length > 0) {
+                    for (ScoreDoc doc : results.scoreDocs) {
+                        int docId = doc.doc;
+
+                        IndexReader reader = DirectoryReader.open(LocalLuceneManager.index);
+                        IndexSearcher searcher = new IndexSearcher(reader);
+
+                        Document thisDoc = searcher.doc(docId);
+                        String docSkillName = thisDoc.get("skill");
+
+                        Double calculatedScore = similarity.apply(skill, docSkillName);
+                        if (calculatedScore > score) {
+                            score = calculatedScore;
+                            selected = docSkillName;
+                        }
+                    }
+                    
+                    // Retrieve userbean session
+                    UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+                    String userId = ub.getUser().getUserId();
+                    
+                    EntityManager em = PersistenceManager.getEntityManager();
+                    em.getTransaction().begin();
+
+                    TypedQuery<String> skillQuery = em.createQuery("SELECT s.skillName FROM UserCourse uc, Skill s WHERE uc.userId.userId = ?1 AND uc.courseId.courseId = s.skillPK.courseId AND s.skillName = ?2", String.class);
+                    skillQuery.setParameter(1, userId);
+                    skillQuery.setParameter(2, selected);
+                    List<String> skills = skillQuery.getResultList();
+                    
+                    skillStatusArr.add(!skills.isEmpty());
+                }
+                else {
+                    skillStatusArr.add(false);
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
         try {
             // Retrieve salary information for the specific job
             String url = "https://research.larc.smu.edu.sg/wagedb/api/get-salary-info/";
@@ -693,11 +812,11 @@ public class SearchBean {
             if (unachievedTemp != null && !unachievedTemp.isEmpty()) {
                 unachievedList.add(unachievedTemp);
             }
-            
+
             trackSkillMap = new LinkedHashMap<>();
             trackSkillMap.put("Skills achieved from this Track", achievedList);
             trackSkillMap.put("Skills unachieved from this Track", unachievedList);
-            
+
             //Return visualisable json data
             //Naming conflicts in jsonx.json library and gson.json library
             //the main logic is To retrieve relative course and skill information based on the track submitted
@@ -788,9 +907,9 @@ public class SearchBean {
 
             skillInBubble = finalBubble;
             //insert tracksearch data into database
-            insertTrackSearchToAccessSummary(em, ub.getUser().getSchool(),track);
+            insertTrackSearchToAccessSummary(em, ub.getUser().getSchool(), track);
             em.getTransaction().commit();
-            
+
             FacesContext.getCurrentInstance().getExternalContext().redirect("TrackDetails.jsf");
         } catch (IOException e) {
             e.printStackTrace();
@@ -801,24 +920,24 @@ public class SearchBean {
         List<SkillData> fullSkillData = DataService.retrieveSkillJobData();
         Map<String, Integer> checkListMap = new HashMap<>();
         List<JobData> checkList = new ArrayList<>();
-        
+
         if (trackSkillList != null && trackSkillList.size() > 0) {
             trackSkillList.stream().map((skillName) -> fullSkillData.stream()
                     .filter(data -> skillName.equals(data.getSkill()))
                     .findAny()
                     .orElse(null)).filter((skillData) -> (skillData != null)).map((skillData) -> skillData.getData()).filter((jobDataList) -> (jobDataList != null && jobDataList.size() > 0)).forEachOrdered((jobDataList) -> {
-                        for (JobData thisJobData : jobDataList) {
-                            String jobTitle = thisJobData.getJobtitle();
-                            String jobIndustry = thisJobData.getIndustry();
-                            List<String> skills = thisJobData.getSkills();
-                            if (checkListMap.keySet().contains(jobTitle)) {
-                                int num = checkListMap.get(jobTitle);
-                                checkListMap.put(jobTitle, (num + 1));
-                            } else {
-                                checkListMap.put(jobTitle, 1);
-                                checkList.add(thisJobData);
-                            }
-                        }
+                for (JobData thisJobData : jobDataList) {
+                    String jobTitle = thisJobData.getJobtitle();
+                    String jobIndustry = thisJobData.getIndustry();
+                    List<String> skills = thisJobData.getSkills();
+                    if (checkListMap.keySet().contains(jobTitle)) {
+                        int num = checkListMap.get(jobTitle);
+                        checkListMap.put(jobTitle, (num + 1));
+                    } else {
+                        checkListMap.put(jobTitle, 1);
+                        checkList.add(thisJobData);
+                    }
+                }
             });
 
             final Map<String, Integer> sortedByCount = checkListMap.entrySet()
@@ -863,7 +982,7 @@ public class SearchBean {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String uri = request.getRequestURI();
         String fileName = uri.split("/")[uri.split("/").length - 1];
-        
+
         try {
             UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
             boolean isLoggedIn = ub != null && ub.getUser() != null;
@@ -871,8 +990,7 @@ public class SearchBean {
                 if (!fileName.equals("login.jsf")) {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("login.jsf");
                 }
-            }
-            else {
+            } else {
                 if (fileName.equals("login.jsf")) {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("userhome.jsf");
                 }
@@ -882,17 +1000,18 @@ public class SearchBean {
         }
     }
 
-    
     /**
-     * This method checks if user is logged in or not [AND] if there are any tracks being searched at the moment. 
-     * If user is not logged in, they will be sent back to login.jsf
-     * If user is logged in AND no tracks are being searched BUT user is at TrackDetails.jsf, they will be sent back to userhome.jsf
+     * This method checks if user is logged in or not [AND] if there are any
+     * tracks being searched at the moment. If user is not logged in, they will
+     * be sent back to login.jsf If user is logged in AND no tracks are being
+     * searched BUT user is at TrackDetails.jsf, they will be sent back to
+     * userhome.jsf
      */
     public void isPrereqTrackFulfilled() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String uri = request.getRequestURI();
         String fileName = uri.split("/")[uri.split("/").length - 1];
-        
+
         try {
             // check if user if logged in
             UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
@@ -912,17 +1031,18 @@ public class SearchBean {
         }
     }
 
-    
     /**
-     * This method checks if user is logged in or not [AND] if there are any jobs being searched at the moment. 
-     * If user is not logged in, they will be sent back to login.jsf
-     * If user is logged in AND no jobs are being searched BUT user is at JobDetails.jsf, they will be sent back to userhome.jsf
+     * This method checks if user is logged in or not [AND] if there are any
+     * jobs being searched at the moment. If user is not logged in, they will be
+     * sent back to login.jsf If user is logged in AND no jobs are being
+     * searched BUT user is at JobDetails.jsf, they will be sent back to
+     * userhome.jsf
      */
     public void isPrereqJobFulfilled() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String uri = request.getRequestURI();
         String fileName = uri.split("/")[uri.split("/").length - 1];
-        
+
         try {
             // check if user if logged in
             UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
@@ -962,21 +1082,83 @@ public class SearchBean {
             ex.printStackTrace();
         }
     }
-    
+
     //insert user's job search data into database
-    public void insertJobSearchToAccessSummary(EntityManager em, String school, String jobName){
+    public void insertJobSearchToAccessSummary(EntityManager em, String school, String jobName) {
         java.util.Date now = new Date();
-        String accessType="J";
-        AccessSummary as = new AccessSummary(now, school,accessType,null,jobName);
+        String accessType = "J";
+        AccessSummary as = new AccessSummary(now, school, accessType, null, jobName);
         em.persist(as);
-        
-        
+
     }
+
     //insert user's track search data into database
-    public void insertTrackSearchToAccessSummary(EntityManager em, String school,String trackName){
+    public void insertTrackSearchToAccessSummary(EntityManager em, String school, String trackName) {
         java.util.Date now = new Date();
-        String accessType="T";
-        AccessSummary as = new AccessSummary(now, school,accessType,trackName,null);
+        String accessType = "T";
+        AccessSummary as = new AccessSummary(now, school, accessType, trackName, null);
         em.persist(as);
+    }
+
+    public void skillToCourse() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        JaccardSimilarity similarity = new JaccardSimilarity();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        String skillName = request.getParameter("skill");
+        missingSkill = skillName;
+        skillToCourses = new ArrayList<>();
+        skillToCoursesTrackLabels = new ArrayList<>();
+        System.out.println("finding for skill >> " + missingSkill);
+        try {
+            TopDocs results = LocalLuceneManager.searchQuery(skillName);
+            String selected = "";
+            Double score = 0.0;
+            if (results.scoreDocs.length > 0) {
+                System.out.println("have lucene results");
+                for (ScoreDoc doc : results.scoreDocs) {
+                    int docId = doc.doc;
+
+                    IndexReader reader = DirectoryReader.open(LocalLuceneManager.index);
+                    IndexSearcher searcher = new IndexSearcher(reader);
+
+                    Document thisDoc = searcher.doc(docId);
+                    String docSkillName = thisDoc.get("skill");
+                    
+                    Double calculatedScore = similarity.apply(skillName, docSkillName);
+                    System.out.println("skill >> " + skillName + ", docSkillName >> " + docSkillName + ", score >> " + calculatedScore);
+                    if (calculatedScore > score) {
+                        score = calculatedScore;
+                        selected = docSkillName;
+                    }
+                }
+                
+                System.out.println("final selected >> " + selected);
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                em.getTransaction().begin();
+
+                TypedQuery<Course> courseQuery = em.createQuery("SELECT c FROM Skill s INNER JOIN s.course c ON c.courseId = s.skillPK.courseId WHERE S.skillName = ?1", Course.class);
+                courseQuery.setParameter(1, selected);
+                skillToCourses = courseQuery.getResultList();
+                
+                for (Course course : skillToCourses) {
+                    TypedQuery<String> trackQuery = em.createQuery("SELECT distinct t.trackName FROM Course c, Track t WHERE c.trackId.trackId = t.trackId AND t.trackId = ?1", String.class);
+                    trackQuery.setParameter(1, course.getTrackId().getTrackId());
+                    
+                    List<String> trackNames = trackQuery.getResultList();
+                    skillToCoursesTrackLabels.add(trackNames.get(0));
+                }
+                
+                
+//                for (Course course : skillToCourses) {
+//                    System.out.println(course.getCourseId() + ", " + course.getCourseName() +  ", " + course.getInstructorName());
+//                }
+            }
+            
+            FacesContext.getCurrentInstance().getExternalContext().redirect("missingSkillInCourse.jsf");
+        }
+        catch (IOException ex) {
+            
+        }
     }
 }

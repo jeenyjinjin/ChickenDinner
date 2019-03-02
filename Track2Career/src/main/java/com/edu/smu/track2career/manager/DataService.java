@@ -1,28 +1,21 @@
 package com.edu.smu.track2career.manager;
 
+import com.edu.smu.track2career.entity.Course;
 import com.edu.smu.track2career.entity.special.SkillData;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import com.google.gson.*;
+import com.google.gson.reflect.*;
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletContext;
 
 public class DataService {
 
     private static List<String> skills;
+    private static List<String> localSkills;
 
     public static void retrieveData() {
         ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
@@ -56,7 +49,6 @@ public class DataService {
         ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         Thread thread = new Thread() {
             public void run() {
-                System.out.println("inside run");
                 String base = context.getRealPath(".");
                 String folder = File.separator + "data";
                 String file = File.separator + "skill_job_data.txt";
@@ -76,7 +68,6 @@ public class DataService {
                         JsonArray skillData = result.get("data").getAsJsonArray();
                         obj.add("data", skillData);
                     } catch (Exception ex) {
-//                        ex.printStackTrace();
                         if (ex.getMessage().equals("404") || ex.getMessage().equals("nothing")) {
                             obj.add("data", new JsonArray());
                         }
@@ -90,8 +81,6 @@ public class DataService {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                System.out.println("end");
             }
         };
         thread.start();
@@ -113,6 +102,31 @@ public class DataService {
         catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public static void retrieveAllLocalSkills() {
+        ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String base = context.getRealPath(".");
+        String folder = File.separator + "data";
+        String file = File.separator + "localdata.txt";
+        List<String> skillSets = null;
+        EntityManager em = PersistenceManager.getEntityManager();
+        em.getTransaction().begin();
+        
+        try (PrintStream ps = new PrintStream(new FileOutputStream(base + folder + file, false))) {
+            TypedQuery<String> skillQuery = em.createQuery("SELECT distinct s.skillName FROM Skill s ORDER BY s.skillName", String.class);
+            skillSets = skillQuery.getResultList();
+            localSkills = skillSets;
+            
+            for (String skill : skillSets) {
+                ps.println(skill);
+            }
+
+            ps.close();
+        }
+        catch (Exception ex) {
+            
         }
     }
 }

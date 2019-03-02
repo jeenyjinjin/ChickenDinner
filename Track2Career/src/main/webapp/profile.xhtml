@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -12,7 +7,6 @@ and open the template in the editor.
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-
     <h:head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -32,7 +26,6 @@ and open the template in the editor.
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/smuicon.ico']}"/>
         <h:outputStylesheet name="css/admin-page/cs-skin-elastic.css" />
         <h:outputStylesheet name="css/admin-page/admin-view.css" />
-        <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
         <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet"/>
         <link href="https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jqvmap.min.css" rel="stylesheet"/>
 
@@ -45,13 +38,7 @@ and open the template in the editor.
         <h:outputScript name="js/init.js"/>
         <h:outputScript name="js/select2/select2.min.js"/>
         <h:outputStylesheet name="css/select2/select2.min.css"/>
-
-
-
-
-
     </h:head>
-
     <h:body>
         <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
         <!-- Left Panel -->
@@ -65,12 +52,8 @@ and open the template in the editor.
                         <li class="menu-title">User Profile</li><!-- /.menu-title -->
                         <li>
                             <a href="profile.jsf"> <i class="menu-icon fa fa-user"></i>Update Information </a>
-
                         </li>
-
                         <li class="menu-title">Generated Reports</li><!-- /.menu-title -->
-
-
                         <li>
                             <a href="widgets.html"> <i class="menu-icon fa fa-bookmark"></i>My Reports </a>
                         </li>
@@ -90,7 +73,6 @@ and open the template in the editor.
             <header id="header" class="header">
                 <div class="top-left">
                     <div class="navbar-header">
-
                         <a class="navbar-brand" href="./"><img src="#{resource['images/UserHomeTemp.png']}" alt="Logo"/></a>
                         <a class="navbar-brand hidden" href="./"><img src="#{resource['images/UserHomeTemp.png']}" alt="Logo"/></a>
                         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
@@ -98,20 +80,14 @@ and open the template in the editor.
                 </div>
                 <div class="top-right">
                     <div class="header-menu">
-
-
                         <div class="user-area dropdown float-right">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="menu-icon fa fa-user-circle"></i>
                             </a>
-
                             <div class="user-menu dropdown-menu">
-
-
                                 <h:form><h:commandLink value="Logout"  action="#{user.logout()}"/></h:form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </header>
@@ -120,9 +96,6 @@ and open the template in the editor.
             <div class="content">
                 <!-- Animated -->
                 <div class="animated fadeIn">
-                    <!-- Widgets  -->
-
-                    <!-- /Widgets -->
                     <!--  Traffic  -->
                     <div class="row">
                         <div class="col-lg-12">
@@ -142,14 +115,13 @@ and open the template in the editor.
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <h:message for="fullName" style="color:red;" />
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-user"> </i>
                                                             </div>
-                                                            <h:inputText class="form-control input-md" value="#{user.username}" id="fullName" a:placeholder="Name (Full name)" required="true" requiredMessage="Name (Full name) is required"></h:inputText>
+                                                            <h:inputText class="form-control input-md" value="#{user.fullName}" id="fullName" a:placeholder="Name (Full name)" required="true" requiredMessage="Name (Full name) is required"></h:inputText>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <!-- Primary Occupation -->
@@ -160,47 +132,41 @@ and open the template in the editor.
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <h:message for="occupation1" style="color:red;" />
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-briefcase"></i>
                                                             </div>
                                                             <h:inputText class="form-control input-md" value="#{user.primaryOccupation}" id="occupation1" a:placeholder="Primary Occupation" required="true" requiredMessage="Primary Occupation is required"></h:inputText>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <!-- Secondary Occupation -->
                                             <div class="form-group">
-
                                                 <div class="row">
                                                     <h:outputLabel class="col-md-3 control-label">Secondary Occupation (if any)</h:outputLabel>
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <h:message for="occupation2" style="color:red;" />
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-briefcase"></i>
                                                             </div>
                                                             <h:inputText class="form-control input-md" value="#{user.secondaryOccupation}" id="occupation2" a:placeholder="Secondary Occupation (if any)"></h:inputText>
                                                         </div>
                                                     </div>
-
                                                 </div>
-
-
                                             </div>
 
                                             <!-- Courses -->
                                             <div class="form-group">
-
                                                 <div class="row">
                                                     <h:outputLabel class="col-md-3 control-label">Courses</h:outputLabel>
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <div class="input-group-addon" >
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-graduation-cap" ></i>
                                                             </div>
-                                                            <h:selectManyListbox value="#{user.selectedCourses}" class="myselect" style="width:91%" a:data-placeholder = "Your Courses"> 
+                                                            <h:selectManyListbox value="#{user.selectedCourses}" class="myselect" style="width:90%" a:data-placeholder = "Your Courses"> 
                                                                 <f:selectItem itemValue="" itemLabel="Your Courses" itemDisabled="true" />
                                                                 <ui:repeat value="#{user.courses}" var="c" varStatus="status">
                                                                     <f:selectItem itemValue="#{c.courseId}" itemLabel="#{c.courseName}"/>
@@ -211,64 +177,56 @@ and open the template in the editor.
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <!-- Skills -->
                                             <div class="form-group">
-
                                                 <div class="row">
                                                     <h:outputLabel class="col-md-3 control-label">Skills</h:outputLabel>
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-graduation-cap"></i>
                                                             </div>
-                                                            <h:selectManyListbox disabled="true" id="mySkills" value="#{user.selectedSkills}" class="myselect" style="width:91%;" a:data-placeholder = "Your Skills"> 
+                                                            <h:selectManyListbox disabled="true" id="mySkills" value="#{user.selectedSkills}" class="myselect" style="width:90%;" a:data-placeholder = "Your Skills"> 
                                                                 <f:selectItem itemValue="" itemLabel="Your Skills" itemDisabled="true" /> 
                                                                 <f:selectItems value="#{user.skills}" var="skill" itemValue="#{skill}" itemLabel="#{skill}"/>
                                                             </h:selectManyListbox>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <!-- Phone-->
                                             <div class="form-group">
-
                                                 <div class="row">
                                                     <h:outputLabel class="col-md-3 control-label">Phone number</h:outputLabel>
                                                     <div class="col-md-6">                                                        
                                                         <div class="input-group">
                                                             <h:message for="phone" style="color:red;" />
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-phone"></i>
                                                             </div>
                                                             <h:inputText class="form-control input-md" value="#{user.phone}" id="phone" a:placeholder="Primary Phone number"></h:inputText>
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </div>
 
                                             <!-- Text input-->
                                             <div class="form-group">
-
                                                 <div class="row">
                                                     <h:outputLabel class="col-md-3 control-label">Email Address</h:outputLabel>
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <h:message for="email" style="color:red;" />
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-envelope-o"></i>
                                                             </div>
                                                             <h:inputText class="form-control input-md" value="#{user.email}" id="email" a:placeholder="Email Address"></h:inputText>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <!-- Text input-->
@@ -278,13 +236,12 @@ and open the template in the editor.
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <h:message for="work" style="color:red;" />
-                                                            <div class="input-group-addon">
+                                                            <div class="input-group-addon" style="width: 10%;">
                                                                 <i class="fa fa-clock-o"></i>
                                                             </div>
                                                             <h:inputText class="form-control input-md" value="#{user.work}" id="work" a:placeholder="Working Experience (time period)"></h:inputText> </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </fieldset>
                                         <script>
@@ -312,25 +269,10 @@ and open the template in the editor.
 
                     <div class="row">
                         <div class="col-lg-12">
-
-
                         </div><!-- /# column -->
                     </div>
                     <!--  /Traffic -->
                     <div class="clearfix"></div>
-                    <!-- Orders -->
-
-                    <!-- /.orders -->
-                    <!-- To Do and Live Chat -->
-
-                    <!-- /To Do and Live Chat -->
-                    <!-- Calender Chart Weather  -->
-
-
-                    <!-- /#event-modal -->
-                    <!-- Modal - Calendar - Add Category -->
-
-                    <!-- /#add-category -->
                 </div>
                 <!-- .animated -->
             </div>
@@ -379,11 +321,6 @@ and open the template in the editor.
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 
         <h:outputScript name="js/Admin/fullcalendar-init.js"/>
-
-
-
-
         <!--Local Stuff-->
-
     </h:body>
 </html>

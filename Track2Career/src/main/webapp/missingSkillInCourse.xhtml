@@ -31,7 +31,7 @@
     </h:head>
 
     <h:body>
-        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
+        <f:event type="preRenderView" listener="#{search.isAuthenticated}" />
         <f:event type="preRenderView" listener="#{search.isPrereqJobFulfilled}" />
         <!-- Left Panel -->
         <aside id="left-panel" class="left-panel">
@@ -81,7 +81,7 @@
 
                         <div class="user-area dropdown float-right">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="menu-icon fa fa-user-circle"></i>
+                                <img class="user-avatar rounded-circle" src="#{resource['images/regandemo.jpg']}" alt="User Avatar"/>
                             </a>
 
                             <div class="user-menu dropdown-menu">
@@ -105,127 +105,69 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 style="text-align: center;"><u>Job Title: #{search.job} </u> <br></br> Industry: #{search.industry}</h4>
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row" style="height: 520px;">
-                        <div class="col-lg-6">
-                            <div class="card" style="height: 446px; overflow: scroll;">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card" style="height: 100%; overflow: scroll;">
                                 <div class="card-body">
+                                    <h4><h4 style="text-align: center;"><u>Missing Skill: #{search.missingSkill}</u></h4></h4>
                                 </div>
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <ui:fragment rendered="#{search.skillArr.size() > 0}">
-                                                <div class="table-stats order-table ov-h">
-                                                    <table class="table ">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Skills</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <ui:repeat value="#{search.skillArr}" var="skill" varStatus="myVarStatus">
+                                            
+                                            <div class="table-stats order-table ov-h">
+                                                <h:form>
+                                                <table class="table ">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No.</th>
+                                                            <th>Course code</th>
+                                                            <th>Course</th>
+                                                            
+                                                            <th>Track</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:fragment rendered="#{search.skillToCourses.size() > 0}">
+                                                            <ui:repeat value="#{search.skillToCourses}" var="c" varStatus="varStatus">
                                                                 <tr class= "pb-0">
+                                                                    <td>#{varStatus.index + 1}</td>
+                                                                    <td>#{c.courseId}</td>
                                                                     <td>
-                                                                        <p:commandLink action="#{search.skillToCourse}" style="color: black; font-family: 'Open Sans'; font-weight: 600; font-size: 14px;">
-                                                                            <f:param name="skill" value="#{skill}" />
-                                                                            #{skill}
-                                                                        </p:commandLink>
+                                                                        <h:commandLink value="#{c.courseName}" action="#{course.viewMore}" actionListener="#{course.attrListener}">
+                                                                            <f:attribute name="courseId" value="#{c.courseId}" />
+                                                                        </h:commandLink>
                                                                     </td>
-                                                                    <td>
-                                                                        <ui:fragment rendered="#{search.skillStatusArr[myVarStatus.index]}">
-                                                                            <span class="badge badge-complete">Acquired</span>
-                                                                        </ui:fragment>
-                                                                        <ui:fragment rendered="#{!search.skillStatusArr[myVarStatus.index]}">
-                                                                            <span class="badge badge-pending">Not Yet Acquired</span>
-                                                                        </ui:fragment>
-                                                                    </td>
+                                                                    <td>#{search.skillToCoursesTrackLabels.get(varStatus.index)}</td>
                                                                 </tr>
                                                             </ui:repeat>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </ui:fragment>
-                                            <ui:fragment rendered="#{search.skillArr.size() == 0}">
-                                                <div style="margin-top: -190px;">
-                                                    <h2 align="center">Skills Information</h2>
-                                                    <div align="center">
-                                                        <b>No results found for skills</b>
-                                                    </div>
-                                                </div>
-                                            </ui:fragment>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{search.skillToCourses.size() == 0}">
+                                                            <tr class= "pb-0">
+                                                                <td colspan="4" style="text-align: center;">No courses found for this skill</td>
+                                                            </tr>
+                                                        </ui:fragment>
+                                                    </tbody>
+                                                </table>
+                                                </h:form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="card-body"></div>
                             </div>
                         </div><!-- /# column -->
-                        <div class="col-lg-6">
-                            <div class="card" style="height: 446px;">
-                                <div class="card-body">
-                                    <ui:fragment rendered="#{search.min == 0}">
-                                        <h2 align="center">Salary Information</h2>
-                                        <div align="center">
-                                            <b>No results found for salary</b>
-                                        </div>
-                                    </ui:fragment>
-                                    <ui:fragment rendered="#{search.min > 0}">
-                                        <canvas id="mixChart" width="400" height="400"></canvas>
-                                    </ui:fragment>
-                                </div>
-                            </div>
-                        </div><!-- /# column -->
+                        
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="box-title">Career Pathway</h4>
-                                    <div class="row">
-                                        <ui:fragment rendered="#{search.careerPath.size() == 0}">
-                                            <div class="col-lg-4 col-md-6" style="cursor: pointer;">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div class="stat-widget-five">
-                                                            <div class="stat-icon dib flat-color-3">
-                                                                <i class="pe-7s-rocket"></i>
-                                                            </div>
-                                                            <div class="stat-content">
-                                                                <div class="stat-text">#{search.job}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </ui:fragment>
-                                        <ui:fragment rendered="#{search.careerPath.size() > 0}">
-                                            <ui:repeat value="#{search.careerPath}" var="career" varStatus="myVarStatus">
-                                                <div class="col-lg-4 col-md-6" style="cursor: pointer;">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <div class="stat-widget-five">
-                                                                <div class="stat-icon dib flat-color-3">
-                                                                    <i class="#{myVarStatus.index == 0 ? 'pe-7s-rocket' : 'pe-7s-angle-right-circle'}"></i>
-                                                                </div>
-                                                                <div class="stat-content">
-                                                                    <div class="stat-text">#{career}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </ui:repeat>
-                                        </ui:fragment>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- /# column -->
-                    </div>
+                    
                     <!--  /Traffic -->
                     <div class="clearfix"></div>
                 </div>

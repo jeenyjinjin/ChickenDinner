@@ -162,7 +162,7 @@ public class ExcelExtractorManager {
                         description = value.trim();
 //                        break;
                     } else if (key.equals("keyword") && !value.isEmpty()) {
-                        skills.add(value);
+                        skills.add(StringManager.convertToTitleCaseIteratingChars(value));
                     }
                 }
             }
