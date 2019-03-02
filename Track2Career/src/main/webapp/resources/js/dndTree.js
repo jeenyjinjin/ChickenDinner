@@ -21,7 +21,7 @@ d3.json("", function(error, treeData) {
     // size of the diagram
     //track2career: modified here to resolve the messed up css conflicts
     var viewerWidth = $(document).width()-400;
-    var viewerHeight = $(document).height()/3;
+    var viewerHeight = $(document).height();
 
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
@@ -309,7 +309,7 @@ d3.json("", function(error, treeData) {
         x = -source.y0;
         y = -source.x0;
         //track2career: modified here to satisfy the messed up css conflicts
-        x = x * scale + viewerWidth / 4;
+        x = x * scale;
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
             .duration(duration)

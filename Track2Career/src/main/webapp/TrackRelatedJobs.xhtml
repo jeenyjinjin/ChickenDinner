@@ -37,6 +37,7 @@ and open the template in the editor.
     </h:head>
 
     <h:body>
+        <f:event type="preRenderView" listener="#{user.checkLoggedIn}" />
         <f:event type="preRenderView" listener="#{search.isPrereqTrackFulfilled}" />
         <!-- Left Panel -->
         <aside id="left-panel" class="left-panel">
