@@ -115,7 +115,7 @@ and open the template in the editor.
                                         </div>
                                         <div class="stat-content">
                                             <div class="text-left dib">
-                                                <div class="stat-text"><span class="count">12</span></div>
+                                                <div class="stat-text"><span class="count">#{user.totalUserSkills}</span></div>
                                                 <div class="stat-heading">All Acquired Skills</div>
                                             </div>
                                         </div>
@@ -263,6 +263,8 @@ and open the template in the editor.
             {axis:"Non-track-electives",value:0.73}
         ]
     ];
+    
+    data = #{user.overallTrackCompletionStatus};
     //////////////////////////////////////////////////////////////
     //////////////////// Draw the Chart //////////////////////////
     //////////////////////////////////////////////////////////////

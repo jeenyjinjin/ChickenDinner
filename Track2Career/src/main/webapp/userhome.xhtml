@@ -243,6 +243,16 @@ and open the template in the editor.
 
                         <li class="menu-title">Skills</li><!-- /.menu-title -->
                         <li>
+                            <h:form>
+                                
+                                    
+                                <h:commandLink rendered="true" action="#{user.retrieveSkillSummary()}">
+                                    
+                                    <i class="menu-icon  fa fa-certificate"></i>
+                                    My Skills
+                                </h:commandLink>
+                                
+                            </h:form>
                             <a href="mySkills.jsf"> <i class="menu-icon  fa fa-certificate"></i>My Skills </a>
                         </li>
                     </ul>
