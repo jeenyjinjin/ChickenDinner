@@ -50,7 +50,8 @@ public class BootstrapBean {
                 // Retrieve the first worksheet in the file
                 Sheet sheet = workbook.getSheetAt(0);
 
-                int lastRowIndex = sheet.getLastRowNum();
+//                int lastRowIndex = sheet.getLastRowNum();
+                int lastRowIndex = sheet.getPhysicalNumberOfRows();
                 int contentRowIndex = ExcelExtractorManager.extractHeader(sheet);
                 ExcelExtractorManager.extractContent(sheet, lastRowIndex, contentRowIndex);
                 successMessage = "Data uploaded successfully!";

@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Track2Career</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/icons/favicon.ico']}"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/font-awesome.min.css" />
+        <h:outputStylesheet name="fonts/iconic/css/material-design-iconic-font.min.css" />
+        <h:outputStylesheet name="css/animate/animate.css" />
+        <h:outputStylesheet name="css/css-hamburgers/hamburgers.min.css" />
+        <h:outputStylesheet name="css/animsition/css/animsition.min.css" />
+        <h:outputStylesheet name="css/select2/select2.min.css" />
+        <h:outputStylesheet name="css/daterangepicker/daterangepicker.css"/>
+        <h:outputStylesheet name="css/util.css"/>
+        <h:outputStylesheet name="css/main.css"/>
+    </h:head>
+    <h:body>
+        <div >
+
+            <div class="container-login100" style="background-image: url('#{resource['images/careerbackground.jpg']}');">
+                <div class="wrap-login200">
+                    <form action="#" method="post" id="demoForm" class="demoForm">
+
+                        <fieldset>
+                            <legend class="login100-form-title">Select your interests:</legend>
+
+                            <p>
+                                <select id="scripts" class="interest-multiple" multiple="multiple">
+                                    <option value="BSc (Computer Science):IT Solution Development Major">Develop innovative computing products and solutions </option>
+                                    <option value="BSc (Computer Science):IT Solution Development Major">Build Artificial Intelligence (AI) systems or applications to augment human intelligence</option>
+                                    <option value="BSc (Computer Science):IT Solution Development Major">Protect against cyberspace threats in network, data and software</option>
+                                    <option value="BSc (Computer Science):IT Solution Development Major">Develop cyber-physical systems to sense the environment and communicate with each other (e.g. autonomous vehicles, smart homes)</option>
+
+                                    <option value="BSc (Information Systems):Information Systems Major">Create innovative IT solutions to enhance operational excellence and integrate information-processes-people</option>
+                                    <option value="BSc (Information Systems):Information Systems Major">Discover business issues and develop digital transformation strategies using data analytics </option>
+                                    <option value="BSc (Information Systems):Information Systems Major">Use data analytics to identify and solve real world problems </option>
+                                    <option value="BSc (Information Systems):Information Systems Major">Develop innovative strategies, systems and applications for banking and financial products </option>
+
+                                    <option value="BSc (Information Systems):Smart-City Management &amp; Technology Major">Design and manage smart city innovative solutions to address urbanisation challenges </option>
+                                    <option value="BSc (Information Systems):Smart-City Management &amp; Technology Major">Create value in the public, private and social sectors through innovation solutions</option>
+                                    <option value="BSc (Information Systems):Smart-City Management &amp; Technology Major">Transform digital solutions to address challenges across social, economics, business and environment in an urbanised context</option>
+                                    <option value="BSc (Information Systems):Smart-City Management &amp; Technology Major">Apply data analytics and technology techniques to model development of evidence-based solutions</option>
+
+                                    <option value="BSc (Computing &amp; Law)">Develop and protect IT enabled business models, processes and solutions within a legal framework</option>
+                                    <option value="BSc (Computing &amp; Law)">Help business operations comply with legal, regulatory and contractual requirements</option>
+                                    <option value="BSc (Computing &amp; Law)">Apply Artificial Intelligence (AI), analytics, automation tools etc. to legal tasks and processes </option>
+                                    <option value="BSc (Computing &amp; Law)">Synergise technology and law in operationalizing digital innovations</option>
+                                </select>
+                                
+                                <br></br>
+                                <br></br>
+                                
+                                <p>
+                                <input class="login100-form-btn" type="button" id="showVal" value="Submit" onclick="window.location='track_discovery.jsf';" />
+                                </p>
+                                
+                                <br></br>
+<!--                                <label class="login100-form-title">Suggested programmes: </label>
+                                
+                                <br></br>
+                                
+                                <input type="text" size="70" name="display" id="display" />-->
+                            </p>
+
+                            
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="dropDownSelect1"></div>
+
+        <script>
+            $("#e1").select2();
+        </script>
+        
+        
+        
+        <script>
+<!--            (function() {
+
+                var sel = document.getElementById('scripts');
+                var el = document.getElementById('display');
+                    function getSelectedOption(sel) {
+                        var opt;
+                        for (var i = 0, len = sel.options.length; i &lt; len; i++) {
+                            opt = sel.options[i];
+                            if (opt.selected === true) {
+                            break;
+                        }
+                    }
+                    return opt;
+                }
+
+            // assign onclick handlers to the buttons
+                document.getElementById('showVal').onclick = function () {
+                    el.value = sel.value;
+                }
+
+
+            }());-->
+// immediate function to preserve global namespace
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                             
+                $(".interest-multiple").select2({
+                     maximumSelectionLength: 2
+                     
+                });
+                
+                $('select').select2({
+                    placeholder: 'Select up to 2 interests',
+                    allowClear: true
+                });
+                
+            });
+            
+            
+        </script>
+
+        <h:outputScript name="js/jquery.min.js"/>
+        <h:outputScript name="js/animsition/js/animsition.min.js"/>
+        <h:outputScript name="js/bootstrap/js/popper.js"/>
+        <h:outputScript name="js/bootstrap.min.js"/>
+        <h:outputScript name="js/select2/select2.min.js"/>
+        <h:outputScript name="js/daterangepicker/moment.min.js"/>
+        <h:outputScript name="js/daterangepicker/daterangepicker.js"/>
+        <h:outputScript name="js/countdowntime/countdowntime.js"/>
+        <h:outputScript name="js/main.js"/>
+        
+        
+    </h:body>
+</html>

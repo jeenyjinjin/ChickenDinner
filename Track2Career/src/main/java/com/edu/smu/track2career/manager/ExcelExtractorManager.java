@@ -141,10 +141,10 @@ public class ExcelExtractorManager {
 
                         trackList.add(trackObj);
                     } else if (key.equals("courseCode") && value.isEmpty()) {
-                        break outerloop;
+                        break;
                     } else if (key.equals("courseCode") && !value.isEmpty()) {
                         if (courseCodeList.contains(value)) {
-                            break outerloop;
+                            break;
                         }
                         courseCodeList.add(value);
                         courseCode = value;

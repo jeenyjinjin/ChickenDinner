@@ -202,6 +202,18 @@ iframe {
   background: linear-gradient(top, #061b3d, #03255b);
 }
 
+.wrap-login200 {
+  width: 71%;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 55px 55px 30px 55px;
+
+  background: #061b3d;
+  background: -webkit-linear-gradient(top, #061b3d, #03255b);
+  background: -o-linear-gradient(top, #061b3d, #03255b);
+  background: -moz-linear-gradient(top, #061b3d, #03255b);
+  background: linear-gradient(top, #061b3d, #03255b);
+}
 
 /*------------------------------------------------------------------
 [ Form ]*/
@@ -476,6 +488,11 @@ iframe {
   }
 }
 
+@media (max-width: 576px) {
+  .wrap-login200 {
+    padding: 55px 15px 37px 15px;
+  }
+}
 
 
 /*------------------------------------------------------------------
